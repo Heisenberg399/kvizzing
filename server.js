@@ -78,14 +78,6 @@ const STORE_ITEMS = [
     { itemId: 4, title: "Ruby Avatar Outline", type: "avatar", cost: 2000, icon: "diamond" }
 ];
 
-// Fake leaderboard bots
-const BOTS = [
-    { name: "KvizzMaster99", score: 15420 },
-    { name: "TriviaNinja", score: 14200 },
-    { name: "Brainiac21", score: 12500 },
-    { name: "QuizWhiz", score: 8400 }
-];
-
 async function seedData() {
     const storeCount = await StoreItem.countDocuments();
     if (storeCount === 0) {
@@ -298,21 +290,17 @@ app.get('/api/social', async (req, res) => {
         const allUsers = Object.entries(memUsers).map(([uid, u]) => ({
             name: u.username, score: u.social.score, isCurrentUser: uid === userId
         }));
-        const combined = [...BOTS.map(b => ({ ...b, isCurrentUser: false })), ...allUsers];
-        combined.sort((a, b) => b.score - a.score);
-        return res.json(combined.map((e, i) => ({ ...e, rank: i + 1 })));
+        allUsers.sort((a, b) => b.score - a.score);
+        return res.json(allUsers.map((e, i) => ({ ...e, rank: i + 1 })));
     }
 
     try {
         const realUsers = await SocialEntry.find();
-        const combined = [
-            ...BOTS.map(b => ({ name: b.name, score: b.score, isCurrentUser: false })),
-            ...realUsers.map(u => ({
-                name: u.name, score: u.score, isCurrentUser: u.userId === userId
-            }))
-        ];
-        combined.sort((a, b) => b.score - a.score);
-        res.json(combined.map((e, i) => ({ ...e, rank: i + 1 })));
+        const users = realUsers.map(u => ({
+            name: u.name, score: u.score, isCurrentUser: u.userId === userId
+        }));
+        users.sort((a, b) => b.score - a.score);
+        res.json(users.map((e, i) => ({ ...e, rank: i + 1 })));
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
