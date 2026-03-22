@@ -333,11 +333,11 @@ function endGame() {
     DOM.finalScoreTotal.textContent = `/ ${gameState.totalQuestions}`;
     
     // Post to backend
-    const username = localStorage.getItem('kvizzing_username') || 'Anonymous';
     fetch('/api/stats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ score: gameState.score, streak: gameState.highestStreak, username })
+        credentials: 'include',
+        body: JSON.stringify({ score: gameState.score, streak: gameState.highestStreak })
     }).then(res => res.json()).then(data => {
         DOM.highestStreakDisplay.textContent = gameState.highestStreak;
         DOM.lifetimeStreakDisplay.textContent = data.highestStreak;
@@ -483,7 +483,7 @@ window.switchTab = function(tabName) {
 
 async function loadStats() {
     try {
-        const res = await fetch(`${API_BASE}/stats`);
+        const res = await fetch(`${API_BASE}/stats`, { credentials: 'include' });
         const stats = await res.json();
         // Stat cards
         const ePlayed = document.getElementById('stat-games-played');
@@ -511,12 +511,12 @@ async function loadStats() {
 
 async function loadStore() {
     try {
-        const resStats = await fetch(`${API_BASE}/stats`);
+        const resStats = await fetch(`${API_BASE}/stats`, { credentials: 'include' });
         const stats = await resStats.json();
         const bal = document.getElementById('store-balance');
         if(bal) bal.textContent = stats.lifetimeKnowledge;
         
-        const resStore = await fetch(`${API_BASE}/store`);
+        const resStore = await fetch(`${API_BASE}/store`, { credentials: 'include' });
         const storeItems = await resStore.json();
         
         const grid = document.getElementById('store-grid');
@@ -553,6 +553,7 @@ window.buyItem = async function(itemId) {
         const res = await fetch(`${API_BASE}/store/buy`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({ itemId })
         });
         const data = await res.json();
@@ -569,7 +570,7 @@ window.buyItem = async function(itemId) {
 
 async function loadSocial() {
     try {
-        const res = await fetch(`${API_BASE}/social`);
+        const res = await fetch(`${API_BASE}/social`, { credentials: 'include' });
         const social = await res.json();
         const list = document.getElementById('leaderboard-list');
         if(!list) return;
@@ -609,12 +610,15 @@ function updateWalletDisplay(points) {
     if (storeBal) storeBal.textContent = points;
 }
 
+// Global current username (set on login/session check)
+let currentUsername = 'Guest';
+
 window.openRenameModal = function() {
     const modal = document.getElementById('rename-modal');
     const input = document.getElementById('rename-input');
     if (modal) modal.classList.remove('hidden');
     if (input) {
-        input.value = localStorage.getItem('kvizzing_username') || '';
+        input.value = currentUsername;
         input.focus();
     }
 };
@@ -624,36 +628,85 @@ window.closeRenameModal = function() {
     if (modal) modal.classList.add('hidden');
 };
 
-window.saveNewUsername = function() {
+window.saveNewUsername = async function() {
     const input = document.getElementById('rename-input');
     const newName = input ? input.value.trim() : '';
     if (!newName) return;
-    localStorage.setItem('kvizzing_username', newName);
-    const profileName = document.getElementById('profile-username');
-    if (profileName) profileName.textContent = newName;
+
+    try {
+        const res = await fetch(`${API_BASE}/auth/rename`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ username: newName })
+        });
+        const data = await res.json();
+        if (data.success) {
+            currentUsername = data.username;
+            localStorage.setItem('kvizzing_username', data.username);
+            const profileName = document.getElementById('profile-username');
+            if (profileName) profileName.textContent = data.username;
+        }
+    } catch (e) {
+        console.error('Rename failed:', e);
+    }
     closeRenameModal();
-    // Sync to backend on next stat post
+};
+
+window.logoutUser = async function() {
+    try {
+        await fetch(`${API_BASE}/auth/logout`, { method: 'POST', credentials: 'include' });
+    } catch (e) {}
+    localStorage.removeItem('kvizzing_username');
+    window.location.reload();
 };
 
 // Expose endGame to global scope for the End Quiz button
 window.endGame = endGame;
 
-// Initial hydration
+// Initial hydration — check session via cookie
 window.addEventListener('DOMContentLoaded', async () => {
-    // Username modal handling
-    const savedName = localStorage.getItem('kvizzing_username');
-    if (!savedName) {
+    // Check if user has a session
+    let loggedIn = false;
+    try {
+        const meRes = await fetch(`${API_BASE}/auth/me`, { credentials: 'include' });
+        const me = await meRes.json();
+        if (me.loggedIn) {
+            loggedIn = true;
+            currentUsername = me.username;
+            localStorage.setItem('kvizzing_username', me.username);
+        }
+    } catch (e) {}
+
+    if (!loggedIn) {
+        // Show login modal
         document.getElementById('username-modal').classList.remove('hidden');
     }
 
+    // Username modal → calls auth/login
     const submitBtn = document.getElementById('username-submit');
     const uInput = document.getElementById('username-input');
     if (submitBtn && uInput) {
-        submitBtn.addEventListener('click', () => {
-            const input = uInput.value.trim();
-            if (input) {
-                localStorage.setItem('kvizzing_username', input);
-                document.getElementById('username-modal').classList.add('hidden');
+        submitBtn.addEventListener('click', async () => {
+            const name = uInput.value.trim();
+            if (!name) return;
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username: name })
+                });
+                const data = await res.json();
+                if (data.username) {
+                    currentUsername = data.username;
+                    localStorage.setItem('kvizzing_username', data.username);
+                    document.getElementById('username-modal').classList.add('hidden');
+                    // Refresh stats
+                    hydrateFromBackend();
+                }
+            } catch (e) {
+                console.error('Login failed:', e);
             }
         });
         uInput.addEventListener('keydown', (e) => {
@@ -661,15 +714,19 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Hydrate stats and wallet from backend
+    // Initial data hydration
+    if (loggedIn) hydrateFromBackend();
+});
+
+async function hydrateFromBackend() {
     try {
-        const res = await fetch(`${API_BASE}/stats`);
+        const res = await fetch(`${API_BASE}/stats`, { credentials: 'include' });
         const stats = await res.json();
         const display = document.getElementById('total-games-display');
         if (display) display.textContent = stats.lifetimeKnowledge;
         updateWalletDisplay(stats.lifetimeKnowledge);
     } catch(e) {}
-});
+}
 
 // Levenshtein distance for spelling forgiveness
 function levenshteinDistance(a, b) {

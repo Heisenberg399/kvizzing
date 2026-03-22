@@ -272,7 +272,10 @@
                             <h2 id="profile-username" class="text-2xl sm:text-3xl font-headline font-black text-on-surface">Guest</h2>
                             <button onclick="openRenameModal()" class="material-symbols-outlined text-outline hover:text-primary transition-colors text-xl p-1 rounded-full hover:bg-primary-container/20" title="Rename">edit</button>
                         </div>
-                        <p class="text-on-surface-variant font-medium text-sm">Quiz Enthusiast</p>
+                        <p class="text-on-surface-variant font-medium text-sm mb-2">Quiz Enthusiast</p>
+                        <button onclick="logoutUser()" class="flex items-center gap-1.5 text-xs font-label font-bold text-error hover:text-on-error-container hover:bg-error-container px-3 py-1.5 rounded-full transition-colors">
+                            <span class="material-symbols-outlined text-sm">logout</span> Sign Out
+                        </button>
                     </div>
                     <div class="flex flex-col items-center bg-primary-container/20 px-4 sm:px-6 py-3 rounded-xl">
                         <span class="material-symbols-outlined text-primary text-2xl mb-1" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
