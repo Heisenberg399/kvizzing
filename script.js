@@ -227,7 +227,7 @@ function loadQuestion() {
     }
 
     // Focus input
-    DOM.answerInput.focus();
+    if (window.innerWidth >= 768) DOM.answerInput.focus();
 }
 
 function normalize(str) {
