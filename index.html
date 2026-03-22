@@ -55,7 +55,7 @@
 
     <!-- Top Navigation -->
     <header class="bg-violet-50/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-[0_40px_40px_-10px_rgba(58,38,75,0.06)]">
-        <div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-xl mx-auto">
+        <div class="flex justify-between items-center w-full px-4 sm:px-6 py-3 sm:py-4 max-w-screen-xl mx-auto">
             <div class="text-2xl font-black tracking-tight text-violet-700 dark:text-violet-300 font-headline">KVizzing</div>
             <nav class="hidden md:flex items-center gap-8" id="desktop-nav">
                 <a onclick="switchTab('start')" class="nav-link cursor-pointer text-violet-700 dark:text-violet-300 font-bold font-['Plus_Jakarta_Sans'] text-lg px-3 py-1 rounded-lg" data-tab="start">Play</a>
@@ -72,33 +72,33 @@
 
     <!-- Start Screen -->
     <div id="start-screen">
-        <main class="flex-grow flex flex-col items-center justify-center px-6 pt-8 pb-24 max-w-4xl mx-auto w-full relative">
+        <main class="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 pt-6 sm:pt-8 pb-28 sm:pb-24 max-w-4xl mx-auto w-full relative">
             <div class="absolute top-10 left-[-10%] w-64 h-64 bg-primary-container opacity-10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute bottom-20 right-[-10%] w-72 h-72 bg-tertiary-fixed opacity-10 rounded-full blur-3xl pointer-events-none"></div>
             
-            <div class="text-center mb-12 relative z-10">
-                <h1 class="font-headline text-6xl md:text-8xl font-black tracking-tighter text-primary mb-4 drop-shadow-[0_10px_10px_rgba(112,42,225,0.15)]">KVizzing</h1>
-                <p class="font-body text-xl text-on-surface-variant font-medium">Ready to test your knowledge?</p>
+            <div class="text-center mb-8 sm:mb-12 relative z-10">
+                <h1 class="font-headline text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter text-primary mb-3 sm:mb-4 drop-shadow-[0_10px_10px_rgba(112,42,225,0.15)]">KVizzing</h1>
+                <p class="font-body text-lg sm:text-xl text-on-surface-variant font-medium">Ready to test your knowledge?</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-12 relative z-10 mode-selection">
-                <button id="mode-quick" onclick="selectMode('quick')" class="mode-card group relative flex flex-col items-start p-8 bg-surface-container-low hover:bg-surface-container-highest transition-all duration-500 rounded-xl text-left border-2 border-transparent shadow-[0_20px_40px_rgba(0,0,0,0.02)] overflow-hidden">
-                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><span class="material-symbols-outlined text-9xl" style="font-variation-settings: 'FILL' 1;">timer</span></div>
-                    <div class="w-14 h-14 rounded-full bg-primary-container flex items-center justify-center mb-6 shadow-lg shadow-primary/20"><span class="material-symbols-outlined text-on-primary-container text-3xl" style="font-variation-settings: 'FILL' 1;">bolt</span></div>
-                    <h3 class="font-headline text-2xl font-bold text-on-surface mb-2">Quick 10</h3>
-                    <p class="text-on-surface-variant font-medium">10 random questions for a fast brain workout.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full mb-8 sm:mb-12 relative z-10 mode-selection">
+                <button id="mode-quick" onclick="selectMode('quick')" class="mode-card group relative flex flex-col items-start p-6 sm:p-8 bg-surface-container-low hover:bg-surface-container-highest transition-all duration-500 rounded-xl text-left border-2 border-transparent shadow-[0_20px_40px_rgba(0,0,0,0.02)] overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><span class="material-symbols-outlined text-7xl sm:text-9xl" style="font-variation-settings: 'FILL' 1;">timer</span></div>
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary-container flex items-center justify-center mb-4 sm:mb-6 shadow-lg shadow-primary/20"><span class="material-symbols-outlined text-on-primary-container text-2xl sm:text-3xl" style="font-variation-settings: 'FILL' 1;">bolt</span></div>
+                    <h3 class="font-headline text-xl sm:text-2xl font-bold text-on-surface mb-1 sm:mb-2">Quick 10</h3>
+                    <p class="text-on-surface-variant font-medium text-sm sm:text-base">10 random questions for a fast brain workout.</p>
                 </button>
-                <button id="mode-marathon" onclick="selectMode('marathon')" class="mode-card group relative flex flex-col items-start p-8 bg-surface-container-low hover:bg-surface-container-highest transition-all duration-500 rounded-xl text-left border-2 border-transparent shadow-[0_20px_40px_rgba(0,0,0,0.02)] overflow-hidden">
-                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><span class="material-symbols-outlined text-9xl" style="font-variation-settings: 'FILL' 1;">trophy</span></div>
-                    <div class="w-14 h-14 rounded-full bg-secondary-container flex items-center justify-center mb-6 shadow-lg shadow-secondary/20"><span class="material-symbols-outlined text-on-secondary-container text-3xl" style="font-variation-settings: 'FILL' 1;">all_inclusive</span></div>
-                    <h3 class="font-headline text-2xl font-bold text-on-surface mb-2">Marathon</h3>
-                    <p class="text-on-surface-variant font-medium">Answer all questions! How long can you last?</p>
+                <button id="mode-marathon" onclick="selectMode('marathon')" class="mode-card group relative flex flex-col items-start p-6 sm:p-8 bg-surface-container-low hover:bg-surface-container-highest transition-all duration-500 rounded-xl text-left border-2 border-transparent shadow-[0_20px_40px_rgba(0,0,0,0.02)] overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><span class="material-symbols-outlined text-7xl sm:text-9xl" style="font-variation-settings: 'FILL' 1;">trophy</span></div>
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-secondary-container flex items-center justify-center mb-4 sm:mb-6 shadow-lg shadow-secondary/20"><span class="material-symbols-outlined text-on-secondary-container text-2xl sm:text-3xl" style="font-variation-settings: 'FILL' 1;">all_inclusive</span></div>
+                    <h3 class="font-headline text-xl sm:text-2xl font-bold text-on-surface mb-1 sm:mb-2">Marathon</h3>
+                    <p class="text-on-surface-variant font-medium text-sm sm:text-base">Answer all questions! How long can you last?</p>
                 </button>
             </div>
             
-            <div class="relative z-10 w-full flex justify-center mb-16">
-                <button id="start-btn" class="bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline text-2xl font-extrabold px-16 py-6 rounded-full shadow-[0_25px_50px_-12px_rgba(112,42,225,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-4">
-                    <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>Start Quiz
+            <div class="relative z-10 w-full flex justify-center mb-10 sm:mb-16">
+                <button id="start-btn" class="bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline text-xl sm:text-2xl font-extrabold px-10 sm:px-16 py-5 sm:py-6 rounded-full shadow-[0_25px_50px_-12px_rgba(112,42,225,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3 sm:gap-4">
+                    <span class="material-symbols-outlined text-2xl sm:text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>Start Quiz
                 </button>
             </div>
             
@@ -118,31 +118,31 @@
 
     <!-- Play Screen -->
     <div id="quiz-screen" class="hidden">
-        <main class="flex-grow flex flex-col items-center px-6 py-8 max-w-2xl mx-auto w-full relative z-10">
-            <div class="w-full flex flex-col gap-6 mb-12">
-                <div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+        <main class="flex-grow flex flex-col items-center px-4 sm:px-6 py-6 sm:py-8 pb-28 sm:pb-8 max-w-2xl mx-auto w-full relative z-10">
+            <div class="w-full flex flex-col gap-4 sm:gap-6 mb-8 sm:mb-12">
+                <div class="w-full h-2 sm:h-3 bg-surface-container rounded-full overflow-hidden">
                     <div id="progress-bar" class="h-full w-0 bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-300"></div>
                 </div>
                 <div class="flex justify-between items-end">
                     <div class="flex flex-col">
-                        <span class="text-on-surface-variant font-label text-sm font-bold tracking-widest uppercase">Question</span>
-                        <h2 id="question-counter" class="text-4xl font-headline font-black text-on-surface">1<span class="text-primary-container">/10</span></h2>
+                        <span class="text-on-surface-variant font-label text-xs sm:text-sm font-bold tracking-widest uppercase">Question</span>
+                        <h2 id="question-counter" class="text-3xl sm:text-4xl font-headline font-black text-on-surface">1<span class="text-primary-container text-xl sm:text-2xl">/10</span></h2>
                     </div>
-                    <div class="flex items-center gap-3 bg-secondary-container px-6 py-3 rounded-xl shadow-sm transition-transform" id="streak-container">
-                        <span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                    <div class="flex items-center gap-2 sm:gap-3 bg-secondary-container px-4 sm:px-6 py-2 sm:py-3 rounded-xl shadow-sm transition-transform" id="streak-container">
+                        <span class="material-symbols-outlined text-secondary text-2xl sm:text-3xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
                         <div class="flex flex-col">
-                            <span id="streak-text" class="text-on-secondary-container font-headline font-extrabold text-xl leading-none">0</span>
-                            <span class="text-on-secondary-container text-[10px] font-bold uppercase tracking-tighter">Streak</span>
+                            <span id="streak-text" class="text-on-secondary-container font-headline font-extrabold text-lg sm:text-xl leading-none">0</span>
+                            <span class="text-on-secondary-container text-[9px] sm:text-[10px] font-bold uppercase tracking-tighter">Streak</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <section class="w-full flex flex-col gap-8 mb-12">
+            <section class="w-full flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-12">
                 <div class="relative group">
                     <div class="absolute -top-6 -left-6 w-24 h-24 bg-tertiary-container/20 rounded-full blur-2xl"></div>
                     <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary-container/10 rounded-full blur-3xl"></div>
-                    <h1 id="question-text" class="text-3xl md:text-4xl font-headline font-extrabold text-on-surface leading-tight relative z-10 text-pretty text-center md:text-left min-h-[120px] flex items-center">
+                    <h1 id="question-text" class="text-xl sm:text-3xl md:text-4xl font-headline font-extrabold text-on-surface leading-tight relative z-10 text-pretty text-center min-h-[80px] sm:min-h-[120px] flex items-center justify-center">
                         Loading question...
                     </h1>
                 </div>
@@ -157,14 +157,14 @@
                 </div>
             </section>
             
-            <section class="w-full flex flex-col gap-6">
+            <section class="w-full flex flex-col gap-4 sm:gap-6">
                 <div class="relative w-full">
-                    <input id="answer-input" class="answer-input w-full h-20 bg-surface-container-highest rounded-full border-none px-10 text-xl font-body font-semibold text-on-surface focus:ring-4 focus:ring-primary/20 placeholder:text-outline transition-all duration-300 disabled:opacity-50" placeholder="Type your answer here..." type="text" autocomplete="off"/>
-                    <button id="mic-btn" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-sm active:scale-90 transition-transform hover:bg-surface-bright hidden">
-                        <span class="material-symbols-outlined">mic</span>
+                    <input id="answer-input" class="answer-input w-full h-14 sm:h-20 bg-surface-container-highest rounded-full border-none px-6 sm:px-10 text-lg sm:text-xl font-body font-semibold text-on-surface focus:ring-4 focus:ring-primary/20 placeholder:text-outline transition-all duration-300 disabled:opacity-50" placeholder="Type your answer..." type="text" autocomplete="off"/>
+                    <button id="mic-btn" class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-sm active:scale-90 transition-transform hover:bg-surface-bright hidden">
+                        <span class="material-symbols-outlined text-xl sm:text-2xl">mic</span>
                     </button>
                 </div>
-                <button id="submit-btn" class="w-full h-20 bg-primary text-on-primary rounded-xl font-headline font-black text-2xl tracking-wide shadow-lg hover:bg-primary-dim active:scale-[0.97] transition-all duration-200 disabled:opacity-50 disabled:active:scale-100">
+                <button id="submit-btn" class="w-full h-14 sm:h-20 bg-primary text-on-primary rounded-xl font-headline font-black text-xl sm:text-2xl tracking-wide shadow-lg hover:bg-primary-dim active:scale-[0.97] transition-all duration-200 disabled:opacity-50 disabled:active:scale-100">
                     SUBMIT ANSWER
                 </button>
                 <div class="flex justify-center gap-12 mt-4">
@@ -189,41 +189,41 @@
 
     <!-- Results Screen -->
     <div id="score-screen" class="hidden">
-        <main class="max-w-screen-xl mx-auto px-6 pt-8 pb-32 min-h-screen relative z-10">
-            <section class="relative overflow-hidden rounded-xl p-8 mb-10 confetti-gradient bg-opacity-20 text-center flex flex-col items-center justify-center">
+        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-32 min-h-screen relative z-10">
+            <section class="relative overflow-hidden rounded-xl p-6 sm:p-8 mb-8 sm:mb-10 confetti-gradient bg-opacity-20 text-center flex flex-col items-center justify-center">
                 <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
                 <div class="relative z-10">
-                    <div class="mb-4 inline-flex p-4 rounded-full bg-surface-container-highest shadow-xl">
-                        <span class="material-symbols-outlined text-primary text-5xl" style="font-variation-settings: 'FILL' 1;">celebration</span>
+                    <div class="mb-3 sm:mb-4 inline-flex p-3 sm:p-4 rounded-full bg-surface-container-highest shadow-xl">
+                        <span class="material-symbols-outlined text-primary text-4xl sm:text-5xl" style="font-variation-settings: 'FILL' 1;">celebration</span>
                     </div>
-                    <h1 class="text-4xl md:text-6xl font-black font-headline text-on-background tracking-tighter mb-2">Quiz Complete!</h1>
-                    <p class="text-lg font-medium text-on-surface-variant max-w-md mx-auto" id="score-feedback">You absolutely crushed this challenge. Ready to see the results?</p>
+                    <h1 class="text-3xl sm:text-4xl md:text-6xl font-black font-headline text-on-background tracking-tighter mb-2">Quiz Complete!</h1>
+                    <p class="text-base sm:text-lg font-medium text-on-surface-variant max-w-md mx-auto" id="score-feedback">You absolutely crushed this challenge. Ready to see the results?</p>
                 </div>
             </section>
             
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-10">
-                <div class="md:col-span-8 bg-surface-container rounded-xl p-10 flex flex-col items-center justify-center relative overflow-hidden group">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 mb-8 sm:mb-10">
+                <div class="md:col-span-8 bg-surface-container rounded-xl p-6 sm:p-10 flex flex-col items-center justify-center relative overflow-hidden group">
                     <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
                     <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl"></div>
-                    <span class="font-headline font-bold text-on-surface-variant uppercase tracking-widest text-sm mb-4">Your Final Score</span>
+                    <span class="font-headline font-bold text-on-surface-variant uppercase tracking-widest text-xs sm:text-sm mb-3 sm:mb-4">Your Final Score</span>
                     <div class="flex items-baseline gap-2" id="final-score-container">
-                        <span id="final-score" class="text-9xl font-black font-headline text-primary tracking-tighter">8</span>
-                        <span id="final-score-total" class="text-4xl font-bold font-headline text-outline">/ 10</span>
+                        <span id="final-score" class="text-7xl sm:text-9xl font-black font-headline text-primary tracking-tighter">8</span>
+                        <span id="final-score-total" class="text-3xl sm:text-4xl font-bold font-headline text-outline">/ 10</span>
                     </div>
                 </div>
                 
-                <div class="md:col-span-4 flex flex-col gap-6">
-                    <div class="flex-1 bg-secondary-container rounded-xl p-8 flex flex-col justify-between group overflow-hidden relative">
+                <div class="md:col-span-4 flex flex-row md:flex-col gap-4 sm:gap-6">
+                    <div class="flex-1 bg-secondary-container rounded-xl p-5 sm:p-8 flex flex-col justify-between group overflow-hidden relative">
                         <div class="relative z-10">
-                            <div class="flex justify-between items-start mb-4">
-                                <span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
-                                <span class="bg-secondary text-on-secondary text-xs font-bold px-3 py-1 rounded-full">CURRENT</span>
+                            <div class="flex justify-between items-start mb-2 sm:mb-4">
+                                <span class="material-symbols-outlined text-secondary text-3xl sm:text-4xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                                <span class="bg-secondary text-on-secondary text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1 rounded-full">CURRENT</span>
                             </div>
-                            <h3 id="highest-streak" class="font-headline font-black text-4xl text-on-secondary-container">5</h3>
-                            <p class="font-medium text-on-secondary-fixed-variant">Highest Streak</p>
+                            <h3 id="highest-streak" class="font-headline font-black text-3xl sm:text-4xl text-on-secondary-container">5</h3>
+                            <p class="font-medium text-on-secondary-fixed-variant text-sm sm:text-base">Highest Streak</p>
                         </div>
                         <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
-                            <span class="material-symbols-outlined text-9xl">local_fire_department</span>
+                            <span class="material-symbols-outlined text-7xl sm:text-9xl">local_fire_department</span>
                         </div>
                     </div>
                     
@@ -243,10 +243,10 @@
                 </div>
             </div>
             
-            <div class="mt-8 text-center">
-                <button id="restart-btn" class="bg-primary text-on-primary px-12 py-6 rounded-xl font-headline font-black text-2xl shadow-[0_20px_50px_-10px_rgba(112,42,225,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-4 mx-auto group">
+            <div class="mt-6 sm:mt-8 text-center">
+                <button id="restart-btn" class="bg-primary text-on-primary px-8 sm:px-12 py-4 sm:py-6 rounded-xl font-headline font-black text-xl sm:text-2xl shadow-[0_20px_50px_-10px_rgba(112,42,225,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3 sm:gap-4 mx-auto group">
                     Play Again
-                    <span class="material-symbols-outlined text-3xl group-hover:rotate-180 transition-transform duration-500">replay</span>
+                    <span class="material-symbols-outlined text-2xl sm:text-3xl group-hover:rotate-180 transition-transform duration-500">replay</span>
                 </button>
             </div>
         </main>
@@ -254,9 +254,9 @@
 
     <!-- Stats Screen -->
     <div id="stats-screen" class="hidden">
-        <main class="max-w-screen-xl mx-auto px-6 pt-8 pb-32 min-h-screen relative z-10 w-full">
-            <h2 class="text-3xl md:text-4xl font-headline font-black mb-8 text-on-surface">Your Statistics</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-32 min-h-screen relative z-10 w-full">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-headline font-black mb-6 sm:mb-8 text-on-surface">Your Statistics</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <!-- Data cards here -->
                 <div class="bg-surface-container rounded-xl p-8 flex flex-col justify-between group overflow-hidden relative shadow-sm">
                     <div class="relative z-10">
@@ -285,15 +285,15 @@
 
     <!-- Store Screen -->
     <div id="store-screen" class="hidden">
-        <main class="max-w-screen-xl mx-auto px-6 pt-8 pb-32 min-h-screen relative z-10 w-full">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl md:text-4xl font-headline font-black text-on-surface">KVizzing Store</h2>
-                <div class="bg-primary-container/20 px-4 py-2 rounded-full flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary">account_balance_wallet</span>
-                    <span id="store-balance" class="font-bold text-primary font-headline text-xl">0</span>
+        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-32 min-h-screen relative z-10 w-full">
+            <div class="flex justify-between items-center mb-6 sm:mb-8">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-headline font-black text-on-surface">KVizzing Store</h2>
+                <div class="bg-primary-container/20 px-3 sm:px-4 py-2 rounded-full flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-xl">account_balance_wallet</span>
+                    <span id="store-balance" class="font-bold text-primary font-headline text-lg sm:text-xl">0</span>
                 </div>
             </div>
-            <div id="store-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div id="store-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                 <!-- Dynamically populated from /api/store -->
             </div>
         </main>
@@ -301,8 +301,8 @@
 
     <!-- Social Screen -->
     <div id="social-screen" class="hidden">
-        <main class="max-w-screen-xl mx-auto px-6 pt-8 pb-32 min-h-screen relative z-10 w-full">
-            <h2 class="text-3xl md:text-4xl font-headline font-black mb-8 text-on-surface">Global Leaderboard</h2>
+        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-32 min-h-screen relative z-10 w-full">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-headline font-black mb-6 sm:mb-8 text-on-surface">Global Leaderboard</h2>
             <div class="bg-surface-container rounded-xl overflow-hidden shadow-sm">
                 <ul id="leaderboard-list" class="divide-y divide-outline-variant/20">
                     <!-- Dynamically populated -->
@@ -312,8 +312,8 @@
     </div>
 
     <!-- Mobile Nav -->
-    <nav class="md:hidden bg-violet-50/90 dark:bg-slate-900/90 backdrop-blur-2xl fixed bottom-0 w-full rounded-t-[3rem] z-50 shadow-[0_-20px_50px_rgba(0,0,0,0.05)]">
-        <div class="flex justify-around items-center px-4 pb-6 pt-3" id="mobile-nav">
+    <nav class="md:hidden bg-violet-50/90 dark:bg-slate-900/90 backdrop-blur-2xl fixed bottom-0 w-full rounded-t-[2rem] sm:rounded-t-[3rem] z-50 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] safe-area-bottom">
+        <div class="flex justify-around items-center px-2 sm:px-4 pb-4 sm:pb-6 pt-2 sm:pt-3" id="mobile-nav">
             <a onclick="switchTab('start')" class="nav-icon cursor-pointer flex flex-col items-center justify-center bg-violet-200 text-violet-800 rounded-[2rem] px-6 py-2.5 transition-transform duration-300" data-tab="start">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">videogame_asset</span>
                 <span class="font-['Plus_Jakarta_Sans'] font-medium text-[11px] uppercase tracking-wider mt-1">Play</span>

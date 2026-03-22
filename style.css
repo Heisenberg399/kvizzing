@@ -74,3 +74,24 @@ body {
         box-shadow: 0 0 0 0 rgba(247, 75, 109, 0);
     }
 }
+
+/* Safe area for phones with gesture bars / notches */
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Prevent text overflow on small screens */
+@media (max-width: 640px) {
+    .nav-icon {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    #leaderboard-list li {
+        padding: 1rem 1.25rem;
+    }
+    
+    #leaderboard-list .text-2xl {
+        font-size: 1.25rem;
+    }
+}
