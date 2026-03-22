@@ -2,353 +2,128 @@
 // "KVizzing Funda" Edition
 const quizData = [
     {
-        question: "In 1993, a programmer named Lou Montulli invented a new HTML tag to enliven the early web. It caused text to flash on and off annoyingly and is now considered one of the worst design elements in internet history. What was this deprecated tag?",
+        question: "In 1993, a programmer named Lou Montulli invented a new HTML tag to enliven the early web. It caused text to toggle visibility rapidly and is now universally despised by web designers. The tag was famously used on poorly designed 90s Geocities pages. What is the name of this deprecated tag, which shares its name with a reflexive, involuntary eyelid movement?",
         answer: "Blink",
-        hint: "It shares its name with a reflexive eye movement."
+        hint: "It happens when your eyes are dry or something gets too close."
     },
     {
-        question: "This specific shade of color, officially known as 'Pantone 448 C', was described by market researchers as 'the ugliest color in the world'. It is now legally required to be used on plain tobacco packaging in several countries to deter smoking. What obscure color is this?",
-        answer: "Drab Dark Brown",
-        hint: "It is often also referred to as 'Opaque Couché'."
-    },
-    {
-        question: "The name of this common pill comes from a mispronunciation of the Greek word for 'salicylic acid', its active ingredient found in willow bark. The German company Bayer trademarked the name in 1899. What is this painkiller?",
+        question: "The name of this ubiquitous painkiller has a fascinating origin. It comes from a mispronunciation of the Greek word for 'salicylic acid', its active ingredient which was originally extracted from willow tree bark. The German pharmaceutical giant Bayer officially trademarked the name in 1899. What is this medicine, technically called acetylsalicylic acid?",
         answer: "Aspirin",
-        hint: "Technically, Acetylsalicylic acid."
+        hint: "Take two of these and call me in the morning."
     },
     {
-        question: "In chess, this special pawn move is the only time a piece captures another without landing on the square the captured piece occupied. The term comes from the French for 'in passing'. What is this move?",
+        question: "In chess strategy, there is a specific and unique condition where a pawn captures an opponent's pawn without ever landing on the square that the captured piece occupied. It can only occur immediately after an opponent moves their pawn two squares forward from its starting position. What is the French term for this move, translating literally to 'in passing'?",
         answer: "En Passant",
-        hint: "It happens when a pawn moves two squares forward and lands adjacent to an opponent's pawn."
+        hint: "Holy hell."
     },
     {
-        question: "This Japanese aesthetic philosophy finds beauty in imperfection and transience. It is often illustrated by 'kintsugi', the art of repairing broken pottery with gold lacquer. What is this two-word term?",
+        question: "Rooted in Zen Buddhism, this Japanese aesthetic philosophy is centered on the acceptance of transience and imperfection. It embraces the beauty of things that are modest, humble, and unconventional. It is perfectly illustrated by the art of 'kintsugi', where broken pottery is repaired with gold, making the flaws part of the object's history rather than something to hide. What is this two-word rhyming term?",
         answer: "Wabi Sabi",
-        hint: "It appreciates the modest, the rustic, and the decayed."
+        hint: "Sounds like a spicy green condiment, but repeated."
     },
     {
-        question: "Originally a brand name for a voting machine created in the 1890s, this word has become a generic term for any chaotic or confused situation. It is derived from the company name 'Automatic Booth'. What is the word?",
+        question: "In the 1890s, the 'Automatic Booth Company' created the first mechanical voting machines used in US elections. Over time, when the machines broke down, polling places would descend into chaos. Legend says this gave rise to an English word denoting total disorder and confusion. Even though this origin story is a myth (the word actually comes from the Latin for 'footstool' and later meat benches), what word is this?",
         answer: "Shambles",
-        hint: "Wait, actually the voting machine story is a myth! The real word comes from 'fleshammels' (meat benches). But the word is..."
+        hint: "When my room is profoundly messy, it is in a state of..."
     },
     {
-        question: "The code for the first space shuttle launch was written in a now-obscure programming language developed by NASA/JPL. It was named after the English mathematician who is considered the first computer programmer. What is the language?",
+        question: "When the US Department of Defense needed a unified programming language in the 1970s, they hosted an international competition. The winning language, chosen in 1983, was eventually used for the Space Shuttle, commercial aviation, and high-speed rail. It was named in honor of a 19th-century English mathematician—the daughter of Lord Byron—who is widely considered to have written the world's first computer algorithm for Charles Babbage's Analytical Engine. What is the name of this language?",
         answer: "Ada",
-        hint: "Named after the daughter of Lord Byron."
+        hint: "A three-letter palindrome."
     },
     {
-        question: "This English word for a 'person who loves books' was originally an insult. In 1754, it was used to describe someone who cared more about the physical books than reading them. Now it is a badge of honor. What is the word?",
-        answer: "Bibliophile",
-        hint: "From the Greek for 'book' and 'loving'."
-    },
-    {
-        question: "Known as the 'Gromit Mug' of typography, this font was commissioned by Microsoft in 1994 to be a friendly typeface for children. It is arguably the most hated font in the world among designers. What is it?",
+        question: "In 1994, Vincent Connare, a typographic engineer at Microsoft, noticed that a beta release of the program 'Microsoft Bob' used Times New Roman in the comic balloons of its cartoon dog assistant. Feeling it was inappropriate, he designed a new, friendly font based on the lettering found in Batman and Watchmen graphic novels. Today, it is widely considered the most hated font in professional design. What is it?",
         answer: "Comic Sans",
-        hint: "It mimics the lettering of comic books."
+        hint: "The name literally means 'humorous without serifs'."
     },
     {
-        question: "In 1901, a sponge diver discovered a complex clockwork mechanism off the coast of a Greek island. Dated to around 100 BC, it is considered the world's first analogue computer, capable of predicting astronomical positions. What is it called?",
+        question: "In 1901, a sponge diver seeking shelter from a storm anchored near a small Greek island. Exploring the sea floor, he discovered a 2,000-year-old shipwreck containing a heavily encrusted, geared bronze mechanism. Dated to roughly 100 BC, it is now famous as the world's first analog computer, capable of predicting eclipses and tracking the four-year cycle of athletic games. What is this device named after the island where it was found?",
         answer: "Antikythera Mechanism",
-        hint: "Named after the island where it was found."
+        hint: "Indiana Jones searched for the 'Dial of Destiny', which was based on this real artifact."
     },
     {
-        question: "This symbol # has many names: hash, pound sign, number sign. But its official cartographic name, derived from the phrase 'eight fields', supposedly refers to a village surrounded by eight fields. What is this obscure name?",
+        question: "The history of the telephone keypad is full of strange design choices. When Bell Labs added the asterisk and the pound sign to their keypads in the 1960s, a researcher named Don MacPherson needed a formal name for the pound symbol (#) to use in manuals. He allegedly coined an absurd word combining the prefix for 'eight' (referring to the symbol's eight points) with the last name of athlete Jim Thorpe. What is this obscure cartographic name for the hashtag symbol?",
         answer: "Octothorpe",
-        hint: "The prefix 'octo' means eight."
+        hint: "Octo-(something)."
     },
     {
-        question: "The fear of the number 13 is well known. But there is a specific, tongue-twisting Greek term for the fear of Friday the 13th. What is this lengthy word?",
-        answer: "Friggatriskaidekaphobia",
-        hint: "It combines the Norse goddess Frigg (Friday) and the Greek for thirteen."
-    },
-    {
-        question: "During the Cold War, the CIA spent $20 million on a project to use cats as spies, implanting microphones in their ear canals. The project failed because the first cat was immediately hit by a taxi. What was the project code name?",
-        answer: "Acoustic Kitty",
-        hint: "It sounds like a band name involving sound and a feline."
-    },
-    {
-        question: "The standard gauge of railway tracks (4 feet 8.5 inches) is said to be derived from the wheel spacing of Roman chariots, which was designed to accommodate the width of two of THESE animals side-by-side. What animal?",
+        question: "The standard gauge width for railway tracks across North America and much of Europe is an oddly specific 4 feet, 8.5 inches. Historians trace this peculiar dimension back centuries to the design of Roman war chariots. The chariots were built to this exact width to accommodate the side-by-side rear ends of two of which specific, large domesticated animals?",
         answer: "Horses",
-        hint: "Specifically, their rear ends."
+        hint: "They pull carts."
     },
     {
-        question: "In 1872, a ship was found drifting in the Atlantic with its cargo intact and a meal set on the table, but no crew on board. To this day, the fate of the people remains one of the greatest maritime mysteries. What was the ship's name?",
+        question: "In December 1872, an American merchant brigantine was discovered drifting aimlessly in the mid-Atlantic Ocean. Strikingly, the cargo of denatured alcohol was untouched, a meal was set on the table, and six month's worth of food remained. However, the entire crew, along with the captain's wife and daughter, had vanished without a trace, and no one from the ship was ever seen again. What is the famous name of this quintessential 'ghost ship'?",
         answer: "Mary Celeste",
-        hint: "It is synonymous with 'ghost ship'."
+        hint: "Two names: A common biblical female name, followed by a word meaning 'heavenly'."
     },
     {
-        question: "This common plastic shoelace tip has a name. It comes from the Latin 'acus', meaning needle, because it helps thread the lace through the eyelets. What is it called?",
-        answer: "Aglet",
-        hint: "Phineas and Ferb dedicated a whole song to it."
-    },
-    {
-        question: "The 'Lorem Ipsum' placeholder text used in design is not random gibberish. It is actually a scrambled passage from a philosophical treatise on 'The Ends of Good and Evil' written by which Roman statesman in 45 BC?",
-        answer: "Cicero",
-        hint: "He was a famous Roman orator."
-    },
-    {
-        question: "Before it was a search engine, 'BackRub' was the name of the project that eventually became this tech giant. The current name is a play on the mathematical term for a 1 followed by 100 zeros. What is the company?",
+        question: "Before it dominated the internet, the search engine developed by Larry Page and Sergey Brin at Stanford was originally called 'BackRub', a nod to the way the engine checked back-links to estimate a site's importance. When they finally rebranded, they chose a name inspired by a mathematical term (suggested by Milton Sirotta) for the number 1 followed by 100 zeros. What company is this?",
         answer: "Google",
-        hint: "The mathematical term is 'googol'."
+        hint: "The mathematical term is spelled 'googol'."
     },
     {
-        question: "This psychological effect occurs when people with low ability at a task overestimate their ability. It is named after the two social psychologists who described it in 1999. What is it?",
-        answer: "Dunning-Kruger Effect",
-        hint: "It explains why incompetence is often accompanied by overconfidence."
+        question: "The recognizable 'swoosh' logo of an iconic sportswear brand was designed in 1971 by Carolyn Davidson, a graphic design student at Portland State University. She billed the company a mere $35 for her work. The fluid shape is meant to convey motion and is said to represent the wing of the Greek goddess of victory, from whom the company takes its name. What is the brand?",
+        answer: "Nike",
+        hint: "Just do it."
     },
     {
-        question: "In typography, the small decorative line attached to the end of a stroke in a letter or symbol is called a 'serif'. What is the French word for 'without', used to describe fonts that lack these lines?",
-        answer: "Sans",
-        hint: "As in 'Comic ____'."
+        question: "In 1941, during a walk in the Swiss Alps, electrical engineer George de Mestral grew frustrated picking cocklebur seeds off his clothes and his dog's fur. Examining the burrs under a microscope, he discovered they were covered in hundreds of tiny, resilient hooks that snagged onto the small loops of thread in fabric. Inspired, he spent the next decade patenting a two-sided hook-and-loop fastening system. What did he invent?",
+        answer: "Velcro",
+        hint: "A portmanteau of the French words 'velours' (velvet) and 'crochet' (hook)."
     },
     {
-        question: "The dot that appears over the lowercase letters 'i' and 'j' has a specific name. It is derived from the Latin word for 'title' or 'inscription'. What is this tiny dot called?",
-        answer: "Tittle",
-        hint: "It rhymes with 'little'."
+        question: "The term for a bakers' batch of thirteen (instead of twelve) wasn't an act of generosity, but of fear. In medieval England, the Assize of Bread and Ale strictly regulated the price and weight of bread. If a baker sold a loaf that was underweight, the penalty was severe, often involving fines or a public flogging. To avoid any risk of being short-weight, bakers began throwing in an extra loaf with every order of twelve. What is the three-word phrase for this practice?",
+        answer: "Bakers Dozen",
+        hint: "Thirteen baked goods."
     },
     {
-        question: "Which chemically inert noble gas, often used in lighting, gets its name from the Greek word for 'stranger' or 'foreigner'?",
-        answer: "Xenon",
-        hint: "It starts with X."
+        question: "In 1816, a group of famous writers, including Lord Byron and Percy Shelley, were trapped inside a Swiss villa during a torrential rainstorm—the dreary 'Year Without a Summer'. To pass the time, they held a competition to see who could write the best horror story. Percy's 18-year-old future wife, Mary, won the contest by writing a tale about an ambitious scientist who creates a sapient creature in an unorthodox scientific experiment. What is the name of the novel?",
+        answer: "Frankenstein",
+        hint: "The monster is explicitly left unnamed in the novel; the title refers to the Doctor."
     },
     {
-        question: "The ampersand symbol (&) is actually a ligature of two letters combining to form the Latin word for 'and'. What are those two letters?",
-        answer: "E and T",
-        hint: "Forming the word 'Et'."
-    },
-    {
-        question: "In 1968, Douglas Engelbart gave 'The Mother of All Demos', introducing the mouse, windows, and video conferencing. He called the cursor a 'bug', but what did he call the mouse's on-screen counterpart?",
-        answer: "CAT",
-        hint: "Because the mouse chased it."
-    },
-    {
-        question: "The distinctive smell of rain on dry soil is caused by a byproduct of bacteria called geosmin. The term for this scent was coined by Australian scientists in 1964. What is it?",
-        answer: "Petrichor",
-        hint: "From the Greek 'petra' (stone) and 'ichor' (blood of the gods)."
-    },
-    {
-        question: "Derived from the Arabic word for 'the commander', this naval rank is the highest in many English-speaking navies. The word 'admiral' comes from a longer Arabic phrase meaning 'commander of the... what?",
-        answer: "Sea",
-        hint: "Think about where navies operate."
-    },
-    {
-        question: "What ubiquitous household item, invented by Walter Hunt in 1849 to pay off a $15 debt, was originally called the 'dress pin' and is famous for its clasp that protects the user from the sharp point?",
-        answer: "Safety Pin",
-        hint: "It's safe because the pointy end is covered."
-    },
-    {
-        question: "The name of this Italian pasta translates literally to 'little worms'. It is slightly thicker than spaghetti and often used in seafood dishes. What is it called?",
-        answer: "Vermicelli",
-        hint: "Think 'vermin' but pasta."
-    },
-    {
-        question: "Created in 1937, this canned meat product became a staple for Allied troops during WWII. Its name is widely believed to be a portmanteau of 'Spiced Ham', though the company claims only a few executives know the real meaning. What is it?",
-        answer: "Spam",
-        hint: "It later became the word for junk email thanks to a Monty Python sketch."
-    },
-    {
-        question: "This term for a deceptive or false maneuver to distract an opponent originally referred to a method of training hunting dogs. They would drag a strong-smelling smoked fish across the trail to see if the dogs would lose the scent. What is the term?",
-        answer: "Red Herring",
-        hint: "It's a color and a fish."
-    },
-    {
-        question: "In the 1800s, this chemical element was used extensively in green dyes for wallpaper and dresses in Victorian England, leading to slow poisoning. It is famously rumored to have contributed to Napoleon's death in exile. What is it?",
-        answer: "Arsenic",
-        hint: "Atomic number 33, known as the 'king of poisons'."
-    },
-    {
-        question: "This punctuation mark (‽) combines a question mark and an exclamation point, intended for rhetorical or exclamatory questions like 'What are you doing‽'. Invented by an ad agency head in 1962, what is it called?",
-        answer: "Interrobang",
-        hint: "Combines 'interrogation' and slang for an exclamation mark."
-    },
-    {
-        question: "The origin of this word for 'left-handed' comes from Latin and historically carried connotations of evil, unlucky, or inauspicious, reflecting societal bias against left-handedness. What is the word?",
-        answer: "Sinister",
-        hint: "Opposite of 'Dexter'."
-    },
-    {
-        question: "Named after the Greek goddess of retribution, this word describes an inescapable agent of someone's downfall or a long-standing rival. What is it?",
-        answer: "Nemesis",
-        hint: "Holmes to Moriarty, Batman to Joker."
-    },
-    {
-        question: "During WWI, the British military needed a code name to disguise the development of their new armored fighting vehicles. They told workers they were building mobile water receptacles for the frontline, leading to what everyday name?",
+        question: "During World War II, the British military needed top-secret code names to hide the development of their terrifying new armored combat vehicles from enemy spies. Factory workers were told they were simply constructing mobile, motorized water receptacles for troops on the front lines. This deception was so successful that the fake cover name stuck permanently. What is the common, everyday name for these heavily armored track-laying vehicles?",
         answer: "Tank",
-        hint: "Like a water tank."
+        hint: "It holds a large volume of liquid, or fires a large cannon."
     },
     {
-        question: "This phenomenon explains why you might learn a new obscure word or fact, and suddenly start seeing it everywhere. It is officially known as the frequency illusion, but more commonly goes by what hyphenated name?",
-        answer: "Baader-Meinhof Phenomenon",
-        hint: "Named after a German militant group, oddly enough."
-    },
-    {
-        question: "In aviation, the acronym 'Mayday', used internationally as a distress signal, comes from the phonetic pronunciation of which French phrase?",
-        answer: "M'aidez",
-        hint: "It translates to 'help me'."
-    },
-    {
-        question: "This famous 15th-century manuscript is written entirely in an unknown, unsolved language or cipher and is heavily illustrated with bizarre plants and astrological diagrams. It is currently held at Yale University. What is it called?",
-        answer: "Voynich Manuscript",
-        hint: "Named after the Polish book dealer who bought it in 1912."
-    },
-    {
-        question: "The standard 'QWERTY' keyboard layout was designed in the 1870s not to speed up typing, but to slow it down. Why?",
-        answer: "To prevent typewriter keys from jamming",
-        hint: "Mechanical arms hitting each other was a problem."
-    },
-    {
-        question: "This word, meaning a complete failure or disaster, comes from a 19th-century French term for a bottle wrapped in straw, which was notoriously fragile and prone to breaking. What is the word?",
-        answer: "Fiasco",
-        hint: "Rhymes with tabasco."
-    },
-    {
-        question: "The popular game 'Jenga' gets its name from the Swahili word meaning what action?",
-        answer: "To build",
-        hint: "Which is ironic, since the game usually ends when it falls."
-    },
-    {
-        question: "This term describes the metallic smell produced when skin touches coins or iron railings. Surprisingly, metals have no smell; the scent is actually a compound called 1-octen-3-one produced by what interacting with the metal?",
-        answer: "Skin oils",
-        hint: "Specifically, lipid peroxides breaking down on human skin."
-    },
-    {
-        question: "In 1982, Scott Fahlman proposed using the sequence :-) to indicate a joke on a Carnegie Mellon message board, inadvertently creating what digital communication staple?",
-        answer: "Emoticon",
-        hint: "The precursor to the emoji."
-    },
-    {
-        question: "This brand of adhesive bandage was invented by Earle Dickson in 1920 for his wife, who frequently burned and cut herself while cooking. He attached small pieces of sterile gauze to the center of surgical tape. What is the brand?",
-        answer: "Band-Aid",
-        hint: "It has become a genericized trademark for any adhesive bandage."
-    },
-    {
-        question: "The name of this geometric shape, featuring 20 equal triangular faces, comes from the Greek prefixes for 'twenty' and 'seat/face'. It is famous as the shape of the d20 die in Dungeons & Dragons. What is it?",
+        question: "The word for this popular geometric shape—used notably as the main die (d20) in tabletop games like Dungeons & Dragons—comes directly from Greek roots. The suffix '-hedron' means 'face' or 'seat'. The prefix comes from the Greek word 'eikosi'. Knowing the shape has exactly 20 equilateral triangular faces, what is the geometric name of this solid?",
         answer: "Icosahedron",
-        hint: "Icosa- means twenty."
+        hint: "Starts with an 'I' and ends with 'hedron'."
     },
     {
-        question: "This 1999 sci-fi movie popularized 'bullet time' visual effects. The famous green cascading code shown on screens throughout the film was actually created by scanning recipes from what type of cookbook?",
-        answer: "Sushi",
-        hint: "Japanese cuisine."
+        question: "In the 1630s, the Dutch Republic experienced one of the first recorded speculative economic bubbles in history. The contract prices for the bulbs of a recently introduced, vibrant, and incredibly fashionable flower reached extraordinarily high levels. At the peak, a single bulb sold for more than ten times the annual income of a skilled craftsman, before the market abruptly crashed. What is this famous historical period known as?",
+        answer: "Tulip Mania",
+        hint: "Involves Amsterdam's favorite flower."
     },
     {
-        question: "The name of the Bluetooth wireless technology standard honors a 10th-century Scandinavian king who united divided Danish tribes, just as the technology was intended to unite different communication protocols. What was his name?",
-        answer: "Harald Bluetooth",
-        hint: "His actual surname was Gormsson; Bluetooth was his colorful nickname."
+        question: "Originally debuting in 1981 in a massive arcade hit, this iconic video game protagonist wasn't named after his profession. He was originally known simply as 'Jumpman'. However, during localization in America, Nintendo of America's Seattle warehouse was visited by their angry landlord demanding overdue rent. The developers cheekily decided to name the hero after this landlord. What is the character's name?",
+        answer: "Mario",
+        hint: "He wears a red hat and has a brother named Luigi."
     },
     {
-        question: "The phrase 'Rule of Thumb' is often falsely claimed to originate from an old English law allowing a man to beat his wife with a stick no thicker than his thumb. In reality, it likely relates to what common everyday activity?",
-        answer: "Measurement",
-        hint: "Using body parts as rough tools for carpentry or tailoring."
-    },
-    {
-        question: "In Greek mythology, she was the first human woman created by the gods. Given a jar (mistranslated later as a box) and told not to open it, she did, releasing all evils into the world but leaving 'Hope' inside. Who is she?",
-        answer: "Pandora",
-        hint: "Her name means 'all-gifted'."
-    },
-    {
-        question: "When you get 'goosebumps' from feeling cold or experiencing strong emotions, it is caused by the contraction of tiny muscles called arrectores pilorum at the base of hair follicles. This reflex, useful for animals to look larger or trap heat, is called what?",
-        answer: "Piloerection",
-        hint: "Pilo- refers to hair."
-    },
-    {
-        question: "Before the invention of the eraser in 1770 by Edward Nairne, people commonly used what food item to rub out lead pencil marks?",
-        answer: "Crustless bread",
-        hint: "It involves dough."
-    },
-    {
-        question: "In heraldry, a 'chevron' is an inverted V-shape. What architectural feature, essential for a house's structural integrity, shares this French-derived name because of its shape?",
-        answer: "Rafter",
-        hint: "Part of the framework for a roof."
-    },
-    {
-        question: "This common phrase meaning 'to reveal a secret' has origins in medieval markets. Farmers would sometimes substitute a cheaper animal (like a cat) for a piglet inside a sack. If the sack was opened early, the scam was revealed. What is the phrase?",
+        question: "In medieval markets, a common scam involved farmers substituting a cheap animal—like a stray feline—inside a tied burlap sack instead of the expensive suckling pig the customer thought they were buying. If the customer wised up and opened the sack before paying, the scam was revealed. This historical fraud gives us what common English idiom meaning 'to accidentally reveal a secret'?",
         answer: "Let the cat out of the bag",
         hint: "Meow."
     },
     {
-        question: "Which iconic Video Game character was originally known as 'Jumpman' in his 1981 arcade debut before being renamed after the landlord of Nintendo's American warehouse?",
-        answer: "Mario",
-        hint: "He's a famous plumber."
-    },
-    {
-        question: "The medical term for an ice-cream headache or 'brain freeze' is sphenopalatine ganglioneuralgia. It occurs because the rapid cooling and warming of capillaries in the roof of your mouth sends pain signals to what major facial nerve bundle?",
-        answer: "Trigeminal nerve",
-        hint: "It handles sensation in the face."
-    },
-    {
-        question: "The ubiquitous 'ZIP' code system introduced by the US Postal Service in 1963 was designed to speed up mail sorting. What does the acronym ZIP actually stand for?",
-        answer: "Zone Improvement Plan",
-        hint: "Z.I.P."
-    },
-    {
-        question: "In the 1630s, the Dutch Republic experienced an economic bubble where the contract prices for bulbs of a recently introduced flower reached extraordinarily high levels before collapsing. What was this period called?",
-        answer: "Tulip Mania",
-        hint: "Involves a famous Dutch flower."
-    },
-    {
-        question: "The name of this dinosaur translates to 'fast seizer' or 'swift thief'. Thanks to Jurassic Park, it is widely misunderstood; the real animal was roughly the size of a turkey and covered in feathers. What is it?",
-        answer: "Velociraptor",
-        hint: "Clever girl."
-    },
-    {
-        question: "This everyday item was invented by George de Mestral in 1941 after he noticed how easily cocklebur seeds stuck to his dog’s fur during a walk. Under a microscope, he saw tiny hooks catching on loops of hair. What did he invent?",
-        answer: "Velcro",
-        hint: "Hook-and-loop fastener."
-    },
-    {
-        question: "What extremely hard, dense form of carbon, scoring a perfect 10 on the Mohs hardness scale, gets its name from the ancient Greek word 'adamas', meaning 'unalterable' or 'unbreakable'?",
-        answer: "Diamond",
-        hint: "Often used in jewelry and cutting tools."
-    },
-    {
-        question: "The term for a 'baker's dozen' (meaning 13 instead of 12) originated in medieval England to avoid severe punishment. What were bakers trying to prevent by throwing in an extra loaf?",
-        answer: "Shortchanging customers",
-        hint: "Laws strictly regulated the weight of bread; being under-weight resulted in fines or whippings."
-    },
-    {
-        question: "This famous 1818 novel, subtitled 'The Modern Prometheus', was conceived by its 18-year-old author during a rainy summer in Switzerland as part of a ghost story competition among friends, including Lord Byron. What is the novel?",
-        answer: "Frankenstein",
-        hint: "Written by Mary Shelley."
-    },
-    {
-        question: "The 'M's in M&M's stand for the last names of the two candy makers who created them in 1941. One was Forrest Mars. The other was the son of the president of the Hershey Company. What was his last name?",
-        answer: "Murrie",
-        hint: "Bruce ___"
-    },
-    {
-        question: "A 'jiffy' is an actual unit of measurement, not just a casual expression. In physics and computer science, what does it measure?",
-        answer: "Time",
-        hint: "It generally refers to a very short duration, like the time it takes light to travel one centimeter."
-    },
-    {
-        question: "Which popular snack food was originally created at Disneyland in the mid-1960s using leftover tortillas that were cut up, fried, and seasoned, saving the park money on food waste?",
-        answer: "Doritos",
-        hint: "Casa de Fritos produced them."
-    },
-    {
-        question: "This English idiom meaning 'to be completely wrong' originally comes from archery, where missing the target entirely meant you failed to hit the central wooden peg holding the target together. What is the idiom?",
-        answer: "Off the mark",
-        hint: "Alternatively, 'missing the mark'."
-    },
-    {
-        question: "In 1799, near a town in the Nile Delta, French soldiers discovered a granodiorite stele inscribed with three versions of a decree. It became the key to deciphering ancient Egyptian hieroglyphs. What is it known as?",
-        answer: "Rosetta Stone",
-        hint: "Named after the town, Rashid (Rosetta) in Egypt."
-    },
-    {
-        question: "What is the only letter in the English alphabet that does not appear in the name of any US state?",
-        answer: "Q",
-        hint: "Check every state from Alabama to Wyoming."
-    },
-    {
-        question: "The recognizable 'swoosh' logo of this massive sports apparel brand was designed in 1971 by a graphic design student named Carolyn Davidson. She was paid just $35 for it at the time. What is the brand?",
-        answer: "Nike",
-        hint: "The Greek goddess of victory."
-    },
-    {
-        question: "What common kitchen appliance was accidentally invented by Percy Spencer in 1945 when he noticed a chocolate bar in his pocket had melted while he was working on active radar sets?",
+        question: "In 1945, engineer Percy Spencer was working on active radar sets for the defense contractor Raytheon. One day, he noticed that a peanut cluster candy bar in his shirt pocket had mysteriously softened and melted while he was standing near an active magnetron. Intrigued, he placed popcorn kernels in front of the tube, and they successfully popped. What ubiquitous kitchen appliance did this accidental discovery lead to?",
         answer: "Microwave Oven",
-        hint: "He used a magnetron to pop popcorn next."
+        hint: "It uses electromagnetic radiation to heat food."
+    },
+    {
+        question: "The origin of this English word meaning 'sinister' or 'inauspicious' reflects extreme historical prejudice. It comes directly from the Latin word meaning 'left' or 'on the left side'. Because left-handed people were statistically rare, the Romans associated the left side with evil omens and untrustworthiness. What is the word?",
+        answer: "Sinister",
+        hint: "The opposite of 'dexter' (right-handed/skillful)."
+    },
+    {
+        question: "This specific smell—the earthy, distinctly pleasant scent that fills the air when rain falls on dry soil—is caused by an organic byproduct of soil bacteria called geosmin. The actual term for the smell was coined in 1964 by two Australian researchers who combined the Greek word for 'stone' (petra) with the mythical, golden fluid that flowed in the veins of the Greek gods (ichor). What is the word?",
+        answer: "Petrichor",
+        hint: "It sounds vaguely like a spell from Harry Potter."
+    },
+    {
+        question: "This punctuation mark combines the functions of two common symbols. It is used to end a sentence that is simultaneously a question and an exclamation, conveying surprised disbelief (e.g., 'What are those!?'). It was invented in 1962 by advertising executive Martin Speckter, who named it by combining the Latin word for 'question' with printer's slang for an exclamation mark. What is this hybrid punctuation mark called?",
+        answer: "Interrobang",
+        hint: "Looks like ‽"
     }
 ];
