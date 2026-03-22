@@ -343,6 +343,7 @@ function endGame() {
         DOM.lifetimeStreakDisplay.textContent = data.highestStreak;
         const totalDisp = document.getElementById('total-games-display');
         if (totalDisp) totalDisp.textContent = data.lifetimeKnowledge;
+        updateWalletDisplay(data.lifetimeKnowledge);
     }).catch(e => console.error("Could not sync stats to backend", e));
 
     // Update Persistence
@@ -484,12 +485,25 @@ async function loadStats() {
     try {
         const res = await fetch(`${API_BASE}/stats`);
         const stats = await res.json();
+        // Stat cards
         const ePlayed = document.getElementById('stat-games-played');
         const eScore = document.getElementById('stat-lifetime-score');
         const eStreak = document.getElementById('stat-best-streak');
+        const eAvg = document.getElementById('stat-avg-score');
         if(ePlayed) ePlayed.textContent = stats.gamesPlayed;
         if(eScore) eScore.textContent = stats.lifetimeKnowledge;
         if(eStreak) eStreak.textContent = stats.highestStreak;
+        if(eAvg) eAvg.textContent = stats.gamesPlayed > 0 ? Math.round(stats.lifetimeKnowledge / stats.gamesPlayed) : 0;
+
+        // Profile card
+        const profileName = document.getElementById('profile-username');
+        const profileWallet = document.getElementById('profile-wallet');
+        const username = localStorage.getItem('kvizzing_username') || 'Guest';
+        if (profileName) profileName.textContent = username;
+        if (profileWallet) profileWallet.textContent = stats.lifetimeKnowledge;
+
+        // Update header wallet too
+        updateWalletDisplay(stats.lifetimeKnowledge);
     } catch (e) {
         console.error(e);
     }
@@ -585,6 +599,42 @@ async function loadSocial() {
     }
 }
 
+// --- Wallet & Profile Helpers ---
+function updateWalletDisplay(points) {
+    const headerBal = document.getElementById('header-wallet-balance');
+    if (headerBal) headerBal.textContent = points;
+    const profileBal = document.getElementById('profile-wallet');
+    if (profileBal) profileBal.textContent = points;
+    const storeBal = document.getElementById('store-balance');
+    if (storeBal) storeBal.textContent = points;
+}
+
+window.openRenameModal = function() {
+    const modal = document.getElementById('rename-modal');
+    const input = document.getElementById('rename-input');
+    if (modal) modal.classList.remove('hidden');
+    if (input) {
+        input.value = localStorage.getItem('kvizzing_username') || '';
+        input.focus();
+    }
+};
+
+window.closeRenameModal = function() {
+    const modal = document.getElementById('rename-modal');
+    if (modal) modal.classList.add('hidden');
+};
+
+window.saveNewUsername = function() {
+    const input = document.getElementById('rename-input');
+    const newName = input ? input.value.trim() : '';
+    if (!newName) return;
+    localStorage.setItem('kvizzing_username', newName);
+    const profileName = document.getElementById('profile-username');
+    if (profileName) profileName.textContent = newName;
+    closeRenameModal();
+    // Sync to backend on next stat post
+};
+
 // Expose endGame to global scope for the End Quiz button
 window.endGame = endGame;
 
@@ -611,12 +661,13 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Hydrate stats from backend
+    // Hydrate stats and wallet from backend
     try {
         const res = await fetch(`${API_BASE}/stats`);
         const stats = await res.json();
         const display = document.getElementById('total-games-display');
         if (display) display.textContent = stats.lifetimeKnowledge;
+        updateWalletDisplay(stats.lifetimeKnowledge);
     } catch(e) {}
 });
 

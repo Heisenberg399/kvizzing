@@ -63,7 +63,11 @@
                 <a onclick="switchTab('store')" class="nav-link cursor-pointer text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-lg hover:bg-violet-100 transition-all duration-300 px-3 py-1 rounded-lg" data-tab="store">Store</a>
                 <a onclick="switchTab('social')" class="nav-link cursor-pointer text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-lg hover:bg-violet-100 transition-all duration-300 px-3 py-1 rounded-lg" data-tab="social">Social</a>
             </nav>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 sm:gap-4">
+                <div id="header-wallet" class="flex items-center gap-1.5 bg-primary-container/20 px-3 py-1.5 rounded-full cursor-pointer hover:bg-primary-container/30 transition-colors" onclick="switchTab('store')">
+                    <span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+                    <span id="header-wallet-balance" class="font-headline font-bold text-primary text-sm">0</span>
+                </div>
                 <button onclick="switchTab('social')" class="material-symbols-outlined text-violet-600 dark:text-violet-400 p-2 rounded-full hover:bg-violet-100 transition-colors">leaderboard</button>
                 <button onclick="switchTab('stats')" class="material-symbols-outlined text-violet-600 dark:text-violet-400 p-2 rounded-full hover:bg-violet-100 transition-colors">account_circle</button>
             </div>
@@ -252,32 +256,66 @@
         </main>
     </div>
 
-    <!-- Stats Screen -->
+    <!-- Stats / Profile Screen -->
     <div id="stats-screen" class="hidden">
         <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-32 min-h-screen relative z-10 w-full">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-headline font-black mb-6 sm:mb-8 text-on-surface">Your Statistics</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <!-- Data cards here -->
-                <div class="bg-surface-container rounded-xl p-8 flex flex-col justify-between group overflow-hidden relative shadow-sm">
-                    <div class="relative z-10">
-                        <span class="material-symbols-outlined text-primary text-4xl mb-4" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
-                        <h3 class="text-on-surface-variant font-label font-bold text-sm tracking-widest uppercase mb-1">Games Played</h3>
-                        <p id="stat-games-played" class="text-5xl font-black font-headline text-on-surface">0</p>
+            
+            <!-- Profile Card -->
+            <div class="bg-surface-container rounded-xl p-6 sm:p-8 mb-6 sm:mb-8 relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="flex items-center gap-4 sm:gap-6 relative z-10">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary-container flex items-center justify-center shadow-lg">
+                        <span class="material-symbols-outlined text-on-primary-container text-3xl sm:text-4xl" style="font-variation-settings: 'FILL' 1;">person</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h2 id="profile-username" class="text-2xl sm:text-3xl font-headline font-black text-on-surface">Guest</h2>
+                            <button onclick="openRenameModal()" class="material-symbols-outlined text-outline hover:text-primary transition-colors text-xl p-1 rounded-full hover:bg-primary-container/20" title="Rename">edit</button>
+                        </div>
+                        <p class="text-on-surface-variant font-medium text-sm">Quiz Enthusiast</p>
+                    </div>
+                    <div class="flex flex-col items-center bg-primary-container/20 px-4 sm:px-6 py-3 rounded-xl">
+                        <span class="material-symbols-outlined text-primary text-2xl mb-1" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+                        <span id="profile-wallet" class="font-headline font-black text-xl sm:text-2xl text-primary">0</span>
+                        <span class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-wider">Points</span>
                     </div>
                 </div>
-                <div class="bg-surface-container rounded-xl p-8 flex flex-col justify-between group overflow-hidden relative shadow-sm">
-                    <div class="relative z-10">
-                        <span class="material-symbols-outlined text-tertiary text-4xl mb-4" style="font-variation-settings: 'FILL' 1;">military_tech</span>
-                        <h3 class="text-on-surface-variant font-label font-bold text-sm tracking-widest uppercase mb-1">Lifetime Knowledge</h3>
-                        <p id="stat-lifetime-score" class="text-5xl font-black font-headline text-on-surface">0</p>
+            </div>
+
+            <!-- Rename Modal -->
+            <div id="rename-modal" class="fixed inset-0 bg-inverse-surface/80 backdrop-blur-sm z-[100] flex items-center justify-center hidden">
+                <div class="bg-surface rounded-2xl p-6 sm:p-8 max-w-sm w-full mx-4 shadow-2xl">
+                    <h3 class="text-2xl font-headline font-black text-on-surface mb-2">Change Username</h3>
+                    <p class="text-on-surface-variant text-sm mb-4">Enter your new display name.</p>
+                    <input type="text" id="rename-input" class="w-full bg-surface-container-high rounded-xl border-none px-5 py-3 text-lg font-body font-bold text-on-surface focus:ring-4 focus:ring-primary/20 placeholder:text-outline-variant mb-4" placeholder="New username" maxlength="15">
+                    <div class="flex gap-3">
+                        <button onclick="closeRenameModal()" class="flex-1 py-3 rounded-xl font-headline font-bold text-on-surface-variant bg-surface-container-high hover:bg-surface-container-highest transition-colors">Cancel</button>
+                        <button onclick="saveNewUsername()" class="flex-1 py-3 rounded-xl font-headline font-bold text-on-primary bg-primary hover:bg-primary-dim transition-colors shadow-md">Save</button>
                     </div>
                 </div>
-                <div class="bg-surface-container rounded-xl p-8 flex flex-col justify-between group overflow-hidden relative shadow-sm">
-                    <div class="relative z-10">
-                        <span class="material-symbols-outlined text-secondary text-4xl mb-4" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
-                        <h3 class="text-on-surface-variant font-label font-bold text-sm tracking-widest uppercase mb-1">Best Streak</h3>
-                        <p id="stat-best-streak" class="text-5xl font-black font-headline text-on-surface">0</p>
-                    </div>
+            </div>
+
+            <h3 class="text-xl sm:text-2xl font-headline font-bold mb-4 sm:mb-6 text-on-surface-variant">Your Statistics</h3>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+                <div class="bg-surface-container rounded-xl p-5 sm:p-8 flex flex-col group overflow-hidden relative shadow-sm">
+                    <span class="material-symbols-outlined text-primary text-3xl sm:text-4xl mb-3 sm:mb-4" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+                    <h3 class="text-on-surface-variant font-label font-bold text-[10px] sm:text-sm tracking-widest uppercase mb-1">Games Played</h3>
+                    <p id="stat-games-played" class="text-3xl sm:text-5xl font-black font-headline text-on-surface">0</p>
+                </div>
+                <div class="bg-surface-container rounded-xl p-5 sm:p-8 flex flex-col group overflow-hidden relative shadow-sm">
+                    <span class="material-symbols-outlined text-tertiary text-3xl sm:text-4xl mb-3 sm:mb-4" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+                    <h3 class="text-on-surface-variant font-label font-bold text-[10px] sm:text-sm tracking-widest uppercase mb-1">Total Score</h3>
+                    <p id="stat-lifetime-score" class="text-3xl sm:text-5xl font-black font-headline text-on-surface">0</p>
+                </div>
+                <div class="bg-surface-container rounded-xl p-5 sm:p-8 flex flex-col group overflow-hidden relative shadow-sm">
+                    <span class="material-symbols-outlined text-secondary text-3xl sm:text-4xl mb-3 sm:mb-4" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                    <h3 class="text-on-surface-variant font-label font-bold text-[10px] sm:text-sm tracking-widest uppercase mb-1">Best Streak</h3>
+                    <p id="stat-best-streak" class="text-3xl sm:text-5xl font-black font-headline text-on-surface">0</p>
+                </div>
+                <div class="bg-surface-container rounded-xl p-5 sm:p-8 flex flex-col group overflow-hidden relative shadow-sm">
+                    <span class="material-symbols-outlined text-primary-dim text-3xl sm:text-4xl mb-3 sm:mb-4" style="font-variation-settings: 'FILL' 1;">avg_pace</span>
+                    <h3 class="text-on-surface-variant font-label font-bold text-[10px] sm:text-sm tracking-widest uppercase mb-1">Avg / Game</h3>
+                    <p id="stat-avg-score" class="text-3xl sm:text-5xl font-black font-headline text-on-surface">0</p>
                 </div>
             </div>
         </main>
