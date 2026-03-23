@@ -1,5 +1,4 @@
-/* Import Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+/* Fonts: using basic system font stack */
 
 .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -13,7 +12,7 @@ body {
         radial-gradient(at 100% 100%, rgba(245, 154, 30, 0.1) 0px, transparent 50%);
 }
 .headline-font {
-    font-family: 'Syne', 'Plus Jakarta Sans', sans-serif;
+    font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 
 .confetti-gradient {
@@ -265,6 +264,6 @@ html.dark .answer-input::placeholder {
     border-bottom: 1px solid rgba(36, 158, 161, 0.1);
 }
 
-/* Typography overrides to ensure fonts load correctly */
-.font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
-.font-body { font-family: 'Be Vietnam Pro', sans-serif; }
+/* Typography overrides */
+.font-headline { font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+.font-body { font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }

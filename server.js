@@ -4,6 +4,9 @@ const cors = require('cors');
 const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
@@ -12,6 +15,17 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+// --- Session (required by Passport) ---
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'kvizzing-fallback-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 365 * 24 * 60 * 60 * 1000, sameSite: 'lax' }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.static(path.join(__dirname)));
 
 // --- Mongoose Schemas ---
@@ -19,6 +33,8 @@ app.use(express.static(path.join(__dirname)));
 const userSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
     username: { type: String, default: 'Guest' },
+    googleId: { type: String, default: null },
+    avatar: { type: String, default: null },
     createdAt: { type: Date, default: Date.now }
 });
 
@@ -145,8 +161,84 @@ function getUserId(req) {
     return req.cookies?.kvizzing_uid || null;
 }
 
+// --- PASSPORT GOOGLE STRATEGY ---
+passport.serializeUser((user, done) => done(null, user.userId));
+passport.deserializeUser(async (userId, done) => {
+    try {
+        if (useMemoryDb) {
+            const u = memUsers[userId];
+            return done(null, u ? { userId, username: u.username } : null);
+        }
+        const u = await User.findOne({ userId });
+        done(null, u ? { userId: u.userId, username: u.username } : null);
+    } catch (e) { done(e, null); }
+});
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    const appUrl = process.env.APP_URL || `http://localhost:${PORT}`;
+    passport.use(new GoogleStrategy({
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: `${appUrl}/auth/google/callback`
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            const googleId = profile.id;
+            const displayName = profile.displayName || 'Google User';
+            const avatar = profile.photos?.[0]?.value || null;
+
+            if (useMemoryDb) {
+                // Find existing by googleId
+                let existingUid = Object.keys(memUsers).find(uid => memUsers[uid].googleId === googleId);
+                if (existingUid) {
+                    const u = memUsers[existingUid];
+                    u.username = displayName;
+                    u.avatar = avatar;
+                    return done(null, { userId: existingUid, username: displayName });
+                }
+                const userId = uuidv4();
+                const u = getMemUser(userId);
+                u.username = displayName;
+                u.googleId = googleId;
+                u.avatar = avatar;
+                u.social.name = displayName;
+                return done(null, { userId, username: displayName });
+            }
+
+            // MongoDB: find-or-create
+            let user = await User.findOne({ googleId });
+            if (user) {
+                user.username = displayName;
+                user.avatar = avatar;
+                await user.save();
+            } else {
+                const userId = uuidv4();
+                user = await User.create({ userId, username: displayName, googleId, avatar });
+                await Stats.create({ userId });
+                await SocialEntry.create({ userId, name: displayName, score: 0 });
+            }
+            done(null, { userId: user.userId, username: user.username });
+        } catch (e) { done(e, null); }
+    }));
+    console.log('✅ Google OAuth configured');
+} else {
+    console.warn('⚠️  No GOOGLE_CLIENT_ID — Google OAuth disabled, using username fallback');
+}
+
 // --- AUTH ROUTES ---
 
+// Google OAuth routes
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/' }),
+    (req, res) => {
+        // Set cookie so the rest of the API can use getUserId()
+        const cookieOpts = { httpOnly: true, maxAge: 365 * 24 * 60 * 60 * 1000, sameSite: 'lax' };
+        res.cookie('kvizzing_uid', req.user.userId, cookieOpts);
+        res.redirect('/');
+    }
+);
+
+// Username fallback login
 app.post('/api/auth/login', async (req, res) => {
     const { username } = req.body;
     if (!username || !username.trim()) {
@@ -176,6 +268,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 app.post('/api/auth/logout', (req, res) => {
+    req.logout?.(() => {});
     res.clearCookie('kvizzing_uid');
     res.json({ success: true });
 });
@@ -187,16 +280,21 @@ app.get('/api/auth/me', async (req, res) => {
     if (useMemoryDb) {
         const user = memUsers[userId];
         if (!user) return res.json({ loggedIn: false });
-        return res.json({ loggedIn: true, username: user.username, userId });
+        return res.json({ loggedIn: true, username: user.username, userId, avatar: user.avatar || null });
     }
 
     try {
         const user = await User.findOne({ userId });
         if (!user) return res.json({ loggedIn: false });
-        res.json({ loggedIn: true, username: user.username, userId });
+        res.json({ loggedIn: true, username: user.username, userId, avatar: user.avatar || null });
     } catch (e) {
         res.json({ loggedIn: false });
     }
+});
+
+// Check if Google OAuth is available (frontend uses this)
+app.get('/api/auth/providers', (req, res) => {
+    res.json({ google: !!(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) });
 });
 
 app.post('/api/auth/rename', async (req, res) => {
