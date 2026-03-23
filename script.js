@@ -305,7 +305,7 @@ function handleResult(isCorrect, correctAnswer) {
         DOM.feedbackText.className = "text-xl font-bold text-tertiary transition-all duration-300";
         audio.playCorrect();
 
-        gameState.score++;
+        gameState.score += 10;
         if (!gameState.hintUsed) gameState.streak++;
 
         // Mini confetti for streak milestones
@@ -337,6 +337,16 @@ function showHint() {
     DOM.hintContainer.classList.remove('hidden');
     setTimeout(() => DOM.hintContainer.classList.remove('opacity-0'), 10);
     DOM.hintBtn.disabled = true;
+
+    // Deduct 5 points for using a hint
+    fetch('/api/stats/deduct-hint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ cost: 5 })
+    }).then(res => res.json()).then(data => {
+        if (data.success) updateWalletDisplay(data.remainingPoints);
+    }).catch(e => console.error('Hint deduction failed:', e));
 }
 
 function showAnswer() {
@@ -370,10 +380,10 @@ function endGame() {
     DOM.finalScoreTotal.textContent = `/ ${gameState.totalQuestions}`;
     
     // Post to backend
-    const perfectGame = (gameState.mode === 'quick' && gameState.score === CONFIG.quickModeCount);
+    const perfectGame = (gameState.mode === 'quick' && gameState.score === CONFIG.quickModeCount * 10);
     const totalScore = gameState.score * gameState.pointMultiplier;
     DOM.finalScore.textContent = totalScore;
-    DOM.finalScoreTotal.textContent = `/ ${gameState.totalQuestions * gameState.pointMultiplier}`;
+    DOM.finalScoreTotal.textContent = `/ ${gameState.totalQuestions * 10 * gameState.pointMultiplier}`;
     fetch('/api/stats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -387,12 +397,22 @@ function endGame() {
         updateWalletDisplay(data.lifetimeKnowledge);
     }).catch(e => console.error("Could not sync stats to backend", e));
 
+    // Submit daily score if this was a daily challenge
+    if (gameState.mode === 'daily') {
+        fetch('/api/daily', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ score: totalScore })
+        }).catch(e => console.error("Could not submit daily score", e));
+    }
+
     // Update Persistence
     Storage.saveGame(gameState.score, gameState.highestStreak);
     DOM.totalGamesDisplay.textContent = Storage.get('kvizzing_games_played');
 
     // Celebration
-    const scorePct = gameState.score / gameState.totalQuestions;
+    const scorePct = gameState.score / (gameState.totalQuestions * 10);
     if (scorePct >= 0.8) {
         DOM.scoreFeedback.textContent = "Outstanding Performance!";
         triggerConfetti(2, { particleCount: 150, spread: 100 });
@@ -519,7 +539,7 @@ window.switchTab = function(tabName) {
         loadStore();
     } else if (tabName === 'social') {
         screens.social.classList.remove('hidden');
-        loadSocial('weekly');
+        loadSocial('alltime');
     } else if (tabName === 'community') {
         screens.community.classList.remove('hidden');
         loadCommunity();
@@ -610,6 +630,7 @@ window.buyItem = async function(itemId) {
         const data = await res.json();
         if (data.success) {
             triggerConfetti(0.5, { particleCount: 100, spread: 70 });
+            if (data.remainingPoints !== undefined) updateWalletDisplay(data.remainingPoints);
             // Apply dark theme if user bought Dark Mode (itemId 1)
             if (itemId === 1) applyDarkTheme(true);
             loadStore();
@@ -621,11 +642,17 @@ window.buyItem = async function(itemId) {
     }
 };
 
-async function loadSocial(timeframe = 'weekly') {
+window.loadSocial = async function(timeframe = 'alltime') {
     // Update active tab styling
-    document.querySelectorAll('.lb-tab').forEach(tab => tab.classList.remove('active', 'border-primary'));
+    document.querySelectorAll('.lb-tab').forEach(tab => {
+        tab.classList.remove('bg-oiler-blue', 'text-white');
+        tab.classList.add('text-oiler-blue/60', 'hover:bg-oiler-blue/5');
+    });
     const activeTab = document.getElementById(`lb-tab-${timeframe}`);
-    if (activeTab) activeTab.classList.add('active', 'border-primary');
+    if (activeTab) {
+        activeTab.classList.add('bg-oiler-blue', 'text-white');
+        activeTab.classList.remove('text-oiler-blue/60', 'hover:bg-oiler-blue/5');
+    }
 
     let endpoint = '/social';
     if (timeframe === 'weekly') endpoint = '/social/weekly';
@@ -653,7 +680,7 @@ async function loadSocial(timeframe = 'weekly') {
                         </div>
                         <span class="${nameClass} font-headline text-lg">${displayName}</span>
                     </div>
-                    <span class="font-headline font-black text-2xl text-primary">${user.score}</span>
+                    <span class="font-headline font-black text-2xl text-primary">${user.score} <span class="text-sm font-bold text-on-surface-variant">XP</span></span>
                 </li>
             `;
         });
@@ -1055,142 +1082,6 @@ window.playCommunityQuestion = function(qJson) {
     const commScreen = document.getElementById('community-screen');
     if (commScreen) commScreen.classList.add('hidden');
     
-    DOM.quizScreen.classList.remove('hidden');
-    
-    updateUI();
-    showQuestion();
-};
-
-window.openCommunityModal = () => document.getElementById('community-modal').classList.remove('hidden');
-window.closeCommunityModal = () => document.getElementById('community-modal').classList.add('hidden');
-
-window.submitCommunityQuestion = async function() {
-    const qtext = document.getElementById('comm-question').value;
-    const ans = document.getElementById('comm-answer').value;
-    const hint = document.getElementById('comm-hint').value;
-    const cat = document.getElementById('comm-cat').value;
-    const diff = document.getElementById('comm-diff').value;
-    
-    if (!qtext.trim() || !ans.trim()) return alert('Question and answer are required.');
-    
-    const btn = document.getElementById('comm-submit-btn');
-    btn.textContent = 'Submitting...';
-    btn.disabled = true;
-    
-    try {
-        const res = await fetch(`${API_BASE}/community/submit`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            credentials: 'include',
-            body: JSON.stringify({ question: qtext, answer: ans, hint, category: cat, difficulty: diff })
-        });
-        if (res.ok) {
-            closeCommunityModal();
-            triggerConfetti(0.5);
-            loadCommunity();
-            // Reset form
-            document.getElementById('comm-question').value = '';
-            document.getElementById('comm-answer').value = '';
-            document.getElementById('comm-hint').value = '';
-        } else {
-            const err = await res.json();
-            alert(err.error || 'Failed to submit.');
-        }
-    } catch(e) {
-        console.error(e);
-        alert('Failed to submit question.');
-    } finally {
-        btn.textContent = 'Submit to Community';
-        btn.disabled = false;
-    }
-};
-
-// --- Daily Challenge ---
-window.startDailyChallenge = async function() {
-    audio.unlock();
-    try {
-        const res = await fetch(`${API_BASE}/daily`, { credentials: 'include' });
-        const data = await res.json();
-        if (data.alreadyPlayed) {
-            alert("You've already played today's challenge! Check the daily leaderboard.");
-            switchTab('social');
-            loadSocial('daily');
-            return;
-        }
-        
-        gameState.mode = 'daily';
-        gameState.questions = data.questions;
-        gameState.totalQuestions = gameState.questions.length;
-        gameState.currentIndex = 0;
-        gameState.score = 0;
-        gameState.streak = 0;
-        gameState.highestStreak = 0;
-        gameState.hintUsed = false;
-        gameState.pointMultiplier = 1; // Base scoring for parity
-        
-        DOM.startScreen.classList.add('hidden');
-        DOM.scoreScreen.classList.add('hidden');
-        DOM.quizScreen.classList.remove('hidden');
-        
-        updateUI();
-        showQuestion();
-    } catch (e) {
-        alert("Failed to load daily challenge");
-        console.error(e);
-    }
-};
-
-// --- Community Questions ---
-window.loadCommunity = async function() {
-    try {
-        const res = await fetch(`${API_BASE}/community/questions`);
-        const questions = await res.json();
-        const list = document.getElementById('community-list');
-        if (!list) return;
-        list.innerHTML = '';
-        questions.forEach(q => {
-            list.innerHTML += `
-                <div class="bg-surface-container border border-outline-variant/30 rounded-xl p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-bold tracking-wider uppercase text-on-surface-variant">${q.category}</span>
-                            <span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-bold tracking-wider uppercase text-on-surface-variant">${q.difficulty}</span>
-                        </div>
-                        <p class="font-body text-on-surface mb-6 italic line-clamp-4">"${q.question}"</p>
-                    </div>
-                    <div class="flex items-center justify-between mt-4">
-                        <span class="text-xs font-label text-on-surface-variant">By ${q.authorName || 'Anonymous'}</span>
-                        <button onclick="playCommunityQuestion('${encodeURIComponent(JSON.stringify(q))}')" class="text-primary font-headline font-bold text-sm bg-primary-container/20 px-4 py-2 rounded-lg hover:bg-primary-container/30 transition-colors">Play</button>
-                    </div>
-                </div>
-            `;
-        });
-    } catch(e) { console.error('Failed to load community questions:', e); }
-};
-
-window.playCommunityQuestion = function(qJson) {
-    const q = JSON.parse(decodeURIComponent(qJson));
-    audio.unlock();
-    gameState.mode = 'community';
-    gameState.questions = [{
-        question: q.question,
-        answer: q.answer,
-        hint: q.hint || "No hint given by community member",
-        category: q.category,
-        difficulty: q.difficulty
-    }];
-    gameState.totalQuestions = 1;
-    gameState.currentIndex = 0;
-    gameState.score = 0;
-    gameState.streak = 0;
-    gameState.highestStreak = 0;
-    gameState.hintUsed = false;
-    gameState.pointMultiplier = q.difficulty === 'hard' ? 3 : q.difficulty === 'medium' ? 2 : 1;
-    
-    switchTab('start'); // to reset state visually just in case
-    DOM.startScreen.classList.add('hidden');
-    DOM.scoreScreen.classList.add('hidden');
-    DOM.communityScreen.classList.add('hidden'); // if we added it to screens obj
     DOM.quizScreen.classList.remove('hidden');
     
     updateUI();

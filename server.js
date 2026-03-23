@@ -396,6 +396,39 @@ app.post('/api/stats', async (req, res) => {
     }
 });
 
+// --- HINT COST ---
+
+app.post('/api/stats/deduct-hint', async (req, res) => {
+    const userId = getUserId(req);
+    if (!userId) return res.status(401).json({ error: 'Not logged in' });
+
+    const cost = req.body.cost || 5;
+
+    if (useMemoryDb) {
+        const user = getMemUser(userId);
+        if (user.stats.lifetimeKnowledge < cost) {
+            return res.json({ success: false, error: 'Not enough points', remainingPoints: user.stats.lifetimeKnowledge });
+        }
+        user.stats.lifetimeKnowledge -= cost;
+        user.social.score = user.stats.lifetimeKnowledge;
+        return res.json({ success: true, remainingPoints: user.stats.lifetimeKnowledge });
+    }
+
+    try {
+        let stats = await Stats.findOne({ userId });
+        if (!stats) stats = await Stats.create({ userId });
+        if (stats.lifetimeKnowledge < cost) {
+            return res.json({ success: false, error: 'Not enough points', remainingPoints: stats.lifetimeKnowledge });
+        }
+        stats.lifetimeKnowledge -= cost;
+        await stats.save();
+        await SocialEntry.updateOne({ userId }, { score: stats.lifetimeKnowledge });
+        res.json({ success: true, remainingPoints: stats.lifetimeKnowledge });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 // --- STORE ---
 
 app.get('/api/store', async (req, res) => {
