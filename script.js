@@ -110,6 +110,30 @@ class SoundManager {
 
 const audio = new SoundManager();
 
+// --- Sound Toggle ---
+window.toggleSound = function() {
+    audio.enabled = !audio.enabled;
+    localStorage.setItem('kvizzing_sound', audio.enabled ? 'on' : 'off');
+    const btn = document.getElementById('sound-toggle');
+    if (btn) {
+        btn.textContent = audio.enabled ? 'volume_up' : 'volume_off';
+        btn.classList.toggle('muted', !audio.enabled);
+    }
+};
+
+// Restore sound preference
+(function() {
+    const pref = localStorage.getItem('kvizzing_sound');
+    if (pref === 'off') {
+        audio.enabled = false;
+        const btn = document.getElementById('sound-toggle');
+        if (btn) {
+            btn.textContent = 'volume_off';
+            btn.classList.add('muted');
+        }
+    }
+})();
+
 // --- Persistence ---
 const Storage = {
     get: (key, limit) => parseInt(localStorage.getItem(key) || 0),
@@ -204,7 +228,7 @@ function loadQuestion() {
     // Reset Feedback
     DOM.feedbackText.textContent = '';
     DOM.feedbackContainer.classList.add('hidden', 'opacity-0');
-    DOM.feedbackContainer.classList.remove('bg-error-container/20', 'border-error', 'bg-tertiary-container/20', 'border-tertiary');
+    DOM.feedbackContainer.classList.remove('bg-error-container/20', 'border-error', 'bg-tertiary-container/20', 'border-tertiary', 'feedback-slide-in');
     
     DOM.hintText.textContent = '';
     DOM.hintContainer.classList.add('hidden', 'opacity-0');
@@ -259,9 +283,9 @@ function handleResult(isCorrect, correctAnswer) {
 
     // Visual Feedback
     if (isCorrect) {
-        DOM.answerInput.classList.add('correct');
+        DOM.answerInput.classList.add('correct', 'answer-correct-anim');
         DOM.feedbackContainer.classList.remove('hidden', 'opacity-0');
-        DOM.feedbackContainer.classList.add('bg-tertiary-container/20', 'border-tertiary');
+        DOM.feedbackContainer.classList.add('bg-tertiary-container/20', 'border-tertiary', 'feedback-slide-in');
         DOM.feedbackIcon.textContent = "check_circle";
         DOM.feedbackIcon.className = "material-symbols-outlined mt-0.5 text-tertiary text-3xl";
         DOM.feedbackText.textContent = "Correct!";
@@ -277,9 +301,9 @@ function handleResult(isCorrect, correctAnswer) {
         }
     } else {
         gameState.streak = 0;
-        DOM.answerInput.classList.add('incorrect');
+        DOM.answerInput.classList.add('incorrect', 'answer-incorrect-anim');
         DOM.feedbackContainer.classList.remove('hidden', 'opacity-0');
-        DOM.feedbackContainer.classList.add('bg-error-container/20', 'border-error');
+        DOM.feedbackContainer.classList.add('bg-error-container/20', 'border-error', 'feedback-slide-in');
         DOM.feedbackIcon.textContent = "cancel";
         DOM.feedbackIcon.className = "material-symbols-outlined mt-0.5 text-error text-3xl";
         DOM.feedbackText.innerHTML = `The correct answer was <span class="text-error font-extrabold uppercase">${correctAnswer}</span>`;
@@ -559,6 +583,8 @@ window.buyItem = async function(itemId) {
         const data = await res.json();
         if (data.success) {
             triggerConfetti(0.5, { particleCount: 100, spread: 70 });
+            // Apply dark theme if user bought Dark Mode (itemId 1)
+            if (itemId === 1) applyDarkTheme(true);
             loadStore();
         } else {
             alert(data.error);
@@ -725,6 +751,38 @@ async function hydrateFromBackend() {
         const display = document.getElementById('total-games-display');
         if (display) display.textContent = stats.lifetimeKnowledge;
         updateWalletDisplay(stats.lifetimeKnowledge);
+    } catch(e) {}
+    // Check if user owns Dark Mode theme
+    checkOwnedThemes();
+}
+
+// --- Dark Theme ---
+function applyDarkTheme(enabled) {
+    if (enabled) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('kvizzing_theme', 'dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.removeItem('kvizzing_theme');
+    }
+}
+
+// Check theme on load
+(function() {
+    if (localStorage.getItem('kvizzing_theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+    }
+})();
+
+// Also check store purchases for theme on hydration
+async function checkOwnedThemes() {
+    try {
+        const res = await fetch(`${API_BASE}/store`, { credentials: 'include' });
+        const items = await res.json();
+        const darkMode = items.find(i => i.id === 1 && i.purchased);
+        if (darkMode) {
+            applyDarkTheme(true);
+        }
     } catch(e) {}
 }
 

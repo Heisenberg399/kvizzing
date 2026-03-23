@@ -95,3 +95,101 @@ body {
         font-size: 1.25rem;
     }
 }
+
+/* ===== Answer Reveal Animations ===== */
+
+@keyframes correctPulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 106, 52, 0.4); }
+    30% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(0, 106, 52, 0); }
+    60% { transform: scale(0.99); }
+    100% { transform: scale(1); box-shadow: none; }
+}
+
+@keyframes incorrectShake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-8px); }
+    30% { transform: translateX(8px); }
+    45% { transform: translateX(-6px); }
+    60% { transform: translateX(6px); }
+    75% { transform: translateX(-3px); }
+    90% { transform: translateX(3px); }
+}
+
+@keyframes feedbackSlideIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.answer-correct-anim {
+    animation: correctPulse 0.6s ease-out;
+}
+
+.answer-incorrect-anim {
+    animation: incorrectShake 0.5s ease-out;
+}
+
+.feedback-slide-in {
+    animation: feedbackSlideIn 0.35s ease-out forwards;
+}
+
+/* ===== Dark Mode ===== */
+
+html.dark body {
+    background-color: #1a0a2e;
+    background-image:
+        radial-gradient(at 0% 0%, rgba(112, 42, 225, 0.2) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(0, 106, 52, 0.1) 0px, transparent 50%);
+    color: #e8d5f5;
+}
+
+html.dark header {
+    background-color: rgba(26, 10, 46, 0.85) !important;
+}
+
+html.dark .bg-surface-container,
+html.dark .bg-surface-container-low,
+html.dark .bg-surface-container-high,
+html.dark .bg-surface-container-highest {
+    background-color: #2a1548 !important;
+}
+
+html.dark .bg-surface {
+    background-color: #1a0a2e !important;
+}
+
+html.dark .text-on-surface {
+    color: #e8d5f5 !important;
+}
+
+html.dark .text-on-surface-variant {
+    color: #bda3d1 !important;
+}
+
+html.dark .text-on-background {
+    color: #e8d5f5 !important;
+}
+
+html.dark nav.fixed {
+    background-color: rgba(26, 10, 46, 0.92) !important;
+}
+
+html.dark .answer-input {
+    background-color: #3a1f60 !important;
+    color: #e8d5f5 !important;
+}
+
+html.dark .answer-input::placeholder {
+    color: #856e98 !important;
+}
+
+/* ===== Sound Toggle ===== */
+
+.sound-toggle {
+    transition: all 0.2s ease;
+}
+.sound-toggle:hover {
+    transform: scale(1.1);
+}
+.sound-toggle.muted {
+    opacity: 0.5;
+}

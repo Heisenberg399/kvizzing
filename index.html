@@ -64,6 +64,7 @@
                 <a onclick="switchTab('social')" class="nav-link cursor-pointer text-slate-500 dark:text-slate-400 font-['Plus_Jakarta_Sans'] text-lg hover:bg-violet-100 transition-all duration-300 px-3 py-1 rounded-lg" data-tab="social">Social</a>
             </nav>
             <div class="flex items-center gap-2 sm:gap-4">
+                <button id="sound-toggle" onclick="toggleSound()" class="sound-toggle material-symbols-outlined text-violet-600 dark:text-violet-400 p-2 rounded-full hover:bg-violet-100 transition-colors" title="Toggle Sound" style="font-variation-settings: 'FILL' 1;">volume_up</button>
                 <div id="header-wallet" class="flex items-center gap-1.5 bg-primary-container/20 px-3 py-1.5 rounded-full cursor-pointer hover:bg-primary-container/30 transition-colors" onclick="switchTab('store')">
                     <span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
                     <span id="header-wallet-balance" class="font-headline font-bold text-primary text-sm">0</span>
