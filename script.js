@@ -344,7 +344,9 @@ async function showHint() {
         const data = await res.json();
         
         if (!data.success) {
-            alert("Not enough points! You need 5 points for a hint.");
+            const modal = document.getElementById('no-balance-modal');
+            if (modal) modal.classList.remove('hidden');
+            else alert("Not enough points! You need 5 points for a hint.");
             DOM.hintBtn.disabled = false;
             return;
         }
@@ -519,6 +521,15 @@ const screens = {
 };
 
 window.switchTab = function(tabName) {
+    if (!screens.quiz.classList.contains('hidden') && tabName !== 'quiz') {
+        const modal = document.getElementById('exit-quiz-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.dataset.pendingTab = tabName;
+            return;
+        }
+    }
+
     Object.values(screens).forEach(screen => {
         if(screen) screen.classList.add('hidden');
     });
@@ -557,6 +568,16 @@ window.switchTab = function(tabName) {
     } else if (tabName === 'community') {
         screens.community.classList.remove('hidden');
         loadCommunity();
+    }
+};
+
+window.confirmExitQuiz = function() {
+    const modal = document.getElementById('exit-quiz-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        const pendingTab = modal.dataset.pendingTab;
+        endGame(); // Ends the quiz gracefully and submits data
+        if (pendingTab) switchTab(pendingTab);
     }
 };
 
