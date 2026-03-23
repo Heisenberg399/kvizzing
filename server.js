@@ -54,6 +54,39 @@ const StoreItem = mongoose.model('StoreItem', storeItemSchema);
 const UserPurchase = mongoose.model('UserPurchase', userPurchaseSchema);
 const SocialEntry = mongoose.model('SocialEntry', socialSchema);
 
+// Weekly score schema
+const weeklyScoreSchema = new mongoose.Schema({
+    userId: { type: String, required: true },
+    name: String,
+    score: { type: Number, default: 0 },
+    weekStart: { type: Date, required: true }
+});
+weeklyScoreSchema.index({ userId: 1, weekStart: 1 }, { unique: true });
+const WeeklyScore = mongoose.model('WeeklyScore', weeklyScoreSchema);
+
+// Daily score schema
+const dailyScoreSchema = new mongoose.Schema({
+    userId: { type: String, required: true },
+    name: String,
+    score: { type: Number, default: 0 },
+    date: { type: String, required: true } // 'YYYY-MM-DD'
+});
+dailyScoreSchema.index({ userId: 1, date: 1 }, { unique: true });
+const DailyScore = mongoose.model('DailyScore', dailyScoreSchema);
+
+// Community question schema
+const communityQuestionSchema = new mongoose.Schema({
+    userId: String,
+    authorName: String,
+    question: { type: String, required: true },
+    answer: { type: String, required: true },
+    hint: String,
+    category: { type: String, default: 'history' },
+    difficulty: { type: String, default: 'medium' },
+    createdAt: { type: Date, default: Date.now }
+});
+const CommunityQuestion = mongoose.model('CommunityQuestion', communityQuestionSchema);
+
 // Achievement schema
 const userAchievementSchema = new mongoose.Schema({
     userId: { type: String, required: true },
@@ -221,6 +254,17 @@ app.post('/api/stats', async (req, res) => {
         user.stats.lifetimeKnowledge += score;
         if (streak > user.stats.highestStreak) user.stats.highestStreak = streak;
         user.social.score = user.stats.lifetimeKnowledge;
+        // Track weekly score
+        const weekKey = getWeekStart().toISOString();
+        if (!user.weeklyScores) user.weeklyScores = {};
+        user.weeklyScores[weekKey] = (user.weeklyScores[weekKey] || 0) + score;
+        // Check achievements in memory
+        const extra = { perfectGame: req.body.perfectGame || false };
+        for (const ach of ACHIEVEMENTS) {
+            if (!user.achievements.includes(ach.id) && ach.condition(user.stats, extra)) {
+                user.achievements.push(ach.id);
+            }
+        }
         return res.json(user.stats);
     }
 
@@ -234,6 +278,15 @@ app.post('/api/stats', async (req, res) => {
 
         // Update social entry
         await SocialEntry.updateOne({ userId }, { score: stats.lifetimeKnowledge });
+
+        // Update weekly score
+        const weekStart = getWeekStart();
+        const user = await User.findOne({ userId });
+        await WeeklyScore.updateOne(
+            { userId, weekStart },
+            { $inc: { score }, $set: { name: user ? user.username : 'Guest' } },
+            { upsert: true }
+        );
 
         // Check achievements
         const extra = { perfectGame: req.body.perfectGame || false };
@@ -375,6 +428,207 @@ app.get('/api/achievements', async (req, res) => {
             id: a.id, title: a.title, description: a.description, icon: a.icon,
             unlocked: unlockedIds.includes(a.id)
         })));
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// --- WEEKLY LEADERBOARD ---
+
+function getWeekStart() {
+    const now = new Date();
+    const day = now.getUTCDay(); // 0=Sun, 1=Mon
+    const diff = now.getUTCDate() - day + (day === 0 ? -6 : 1); // Adjust to Monday
+    const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), diff, 0, 0, 0));
+    return monday;
+}
+
+app.get('/api/social/weekly', async (req, res) => {
+    const userId = getUserId(req);
+    const weekStart = getWeekStart();
+
+    if (useMemoryDb) {
+        const weekKey = weekStart.toISOString();
+        const allUsers = Object.entries(memUsers)
+            .filter(([uid, u]) => u.weeklyScores && u.weeklyScores[weekKey])
+            .map(([uid, u]) => ({
+                name: u.username, score: u.weeklyScores[weekKey], isCurrentUser: uid === userId
+            }));
+        allUsers.sort((a, b) => b.score - a.score);
+        return res.json(allUsers.map((e, i) => ({ ...e, rank: i + 1 })));
+    }
+
+    try {
+        const entries = await WeeklyScore.find({ weekStart });
+        const users = entries.map(e => ({
+            name: e.name, score: e.score, isCurrentUser: e.userId === userId
+        }));
+        users.sort((a, b) => b.score - a.score);
+        res.json(users.map((e, i) => ({ ...e, rank: i + 1 })));
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// --- DAILY CHALLENGE ---
+
+function getTodayStr() {
+    return new Date().toISOString().split('T')[0];
+}
+
+function seededShuffle(arr, seed) {
+    // Simple seeded PRNG (mulberry32)
+    let t = seed | 0;
+    const rng = () => { t = (t + 0x6D2B79F5) | 0; let r = Math.imul(t ^ (t >>> 15), 1 | t); r ^= r + Math.imul(r ^ (r >>> 7), 61 | r); return ((r ^ (r >>> 14)) >>> 0) / 4294967296; };
+    const result = [...arr];
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+}
+
+app.get('/api/daily', async (req, res) => {
+    const userId = getUserId(req);
+    const today = getTodayStr();
+    // Convert date string to a numeric seed
+    const seed = today.split('-').join('') | 0;
+
+    // Import questions from questions.js (use require for simplicity)
+    let quizData;
+    try {
+        delete require.cache[require.resolve('./questions.js')];
+        // questions.js uses `const quizData = [...]` — we need to extract it
+        const fs = require('fs');
+        const code = fs.readFileSync(require.resolve('./questions.js'), 'utf8');
+        const fn = new Function(code + '; return quizData;');
+        quizData = fn();
+    } catch(e) {
+        return res.status(500).json({ error: 'Failed to load questions' });
+    }
+
+    const shuffled = seededShuffle(quizData, seed);
+    const dailyQuestions = shuffled.slice(0, 5);
+
+    // Check if user already played today
+    let alreadyPlayed = false;
+    if (userId) {
+        if (useMemoryDb) {
+            const user = getMemUser(userId);
+            alreadyPlayed = user.dailyScores && user.dailyScores[today] !== undefined;
+        } else {
+            const existing = await DailyScore.findOne({ userId, date: today });
+            alreadyPlayed = !!existing;
+        }
+    }
+
+    res.json({
+        date: today,
+        alreadyPlayed,
+        questions: dailyQuestions.map(q => ({
+            question: q.question,
+            answer: q.answer,
+            hint: q.hint,
+            category: q.category || 'history',
+            difficulty: q.difficulty || 'medium'
+        }))
+    });
+});
+
+app.post('/api/daily', async (req, res) => {
+    const userId = getUserId(req);
+    if (!userId) return res.status(401).json({ error: 'Not logged in' });
+    const { score } = req.body;
+    const today = getTodayStr();
+
+    if (useMemoryDb) {
+        const user = getMemUser(userId);
+        if (!user.dailyScores) user.dailyScores = {};
+        if (user.dailyScores[today] !== undefined) {
+            return res.status(400).json({ error: 'Already played today' });
+        }
+        user.dailyScores[today] = score;
+        return res.json({ success: true, score });
+    }
+
+    try {
+        const existing = await DailyScore.findOne({ userId, date: today });
+        if (existing) return res.status(400).json({ error: 'Already played today' });
+        const user = await User.findOne({ userId });
+        await DailyScore.create({ userId, name: user ? user.username : 'Guest', score, date: today });
+        res.json({ success: true, score });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.get('/api/daily/leaderboard', async (req, res) => {
+    const userId = getUserId(req);
+    const today = getTodayStr();
+
+    if (useMemoryDb) {
+        const allUsers = Object.entries(memUsers)
+            .filter(([uid, u]) => u.dailyScores && u.dailyScores[today] !== undefined)
+            .map(([uid, u]) => ({
+                name: u.username, score: u.dailyScores[today], isCurrentUser: uid === userId
+            }));
+        allUsers.sort((a, b) => b.score - a.score);
+        return res.json(allUsers.map((e, i) => ({ ...e, rank: i + 1 })));
+    }
+
+    try {
+        const entries = await DailyScore.find({ date: today });
+        const users = entries.map(e => ({
+            name: e.name, score: e.score, isCurrentUser: e.userId === userId
+        }));
+        users.sort((a, b) => b.score - a.score);
+        res.json(users.map((e, i) => ({ ...e, rank: i + 1 })));
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// --- COMMUNITY QUESTIONS ---
+
+app.post('/api/community/submit', async (req, res) => {
+    const userId = getUserId(req);
+    if (!userId) return res.status(401).json({ error: 'Not logged in' });
+    const { question, answer, hint, category, difficulty } = req.body;
+    if (!question || !answer) return res.status(400).json({ error: 'Question and answer required' });
+
+    if (useMemoryDb) {
+        if (!global.memCommunityQuestions) global.memCommunityQuestions = [];
+        const user = getMemUser(userId);
+        global.memCommunityQuestions.push({
+            id: Date.now(),
+            userId, authorName: user.username,
+            question, answer, hint: hint || '',
+            category: category || 'history', difficulty: difficulty || 'medium',
+            createdAt: new Date()
+        });
+        return res.json({ success: true });
+    }
+
+    try {
+        const user = await User.findOne({ userId });
+        await CommunityQuestion.create({
+            userId, authorName: user ? user.username : 'Guest',
+            question, answer, hint: hint || '',
+            category: category || 'history', difficulty: difficulty || 'medium'
+        });
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.get('/api/community/questions', async (req, res) => {
+    if (useMemoryDb) {
+        return res.json(global.memCommunityQuestions || []);
+    }
+    try {
+        const questions = await CommunityQuestion.find().sort({ createdAt: -1 }).limit(50);
+        res.json(questions);
     } catch (e) {
         res.status(500).json({ error: e.message });
     }

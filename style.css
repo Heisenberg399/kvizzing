@@ -240,3 +240,37 @@ html.dark .answer-input::placeholder {
     box-shadow: 0 8px 20px rgba(112, 42, 225, 0.15);
 }
 
+/* ===== Leaderboard Tabs ===== */
+.lb-tab.active {
+    color: #702ae1;
+    border-color: #702ae1;
+}
+
+/* Custom Keyframes and Utility Classes */
+@keyframes subtle-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+.animate-subtle-bounce { animation: subtle-bounce 3s ease-in-out infinite; }
+
+.pulse-aura-on-hover:hover {
+    box-shadow: 0 0 0 8px rgba(247, 129, 5, 0.1);
+}
+.pulse-aura-on-hover:active {
+    box-shadow: 0 0 0 4px rgba(247, 129, 5, 0.2);
+}
+.tactile-puck-feedback:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+}
+.tonal-shift { transition: background-color 0.3s ease, color 0.3s ease; }
+.glass-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(36, 158, 161, 0.1);
+}
+
+/* Typography overrides to ensure fonts load correctly */
+.font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-body { font-family: 'Be Vietnam Pro', sans-serif; }
