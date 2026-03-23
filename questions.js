@@ -1,4 +1,4 @@
-[
+const quizData = [
     {
         "question": "During the 14th-century Black Death, the city-state of Venice forced ships arriving from infected ports to anchor offshore for forty days before docking. The Italian phrase for this specific 'forty-day' period ('quaranta giorni') eventually morphed into what modern English word, which saw massive global use during the COVID-19 pandemic?",
         "answer": "Quarantine",
@@ -1175,4 +1175,4 @@
         "category": "Pop Culture & Literature",
         "difficulty": "easy"
     }
-]
+];
