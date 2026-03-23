@@ -12,19 +12,55 @@
             theme: {
                 extend: {
                     colors: {
-                        "outline-variant": "#bda3d1", "surface-container-highest": "#edd3ff", "on-error-container": "#510017", "on-secondary-fixed-variant": "#7f3f00", "primary-container": "#b28cff", "secondary": "#904800", "primary-fixed": "#b28cff", "on-surface-variant": "#69537b", "surface": "#fef3ff", "primary-dim": "#6411d5", "on-background": "#3a264b", "tertiary": "#006a34", "surface-container": "#f5e2ff", "error-container": "#f74b6d", "tertiary-fixed": "#6dfe9c", "error-dim": "#a70138", "inverse-on-surface": "#ad93c0", "surface-container-high": "#f1daff", "secondary-dim": "#7e3e00", "on-primary-container": "#2e006c", "secondary-container": "#ffc69f", "inverse-surface": "#180429", "on-primary-fixed": "#000000", "on-tertiary-container": "#005f2e", "on-secondary-container": "#723800", "background": "#fef3ff", "on-primary": "#f8f0ff", "on-secondary-fixed": "#552800", "on-error": "#ffefef", "secondary-fixed": "#ffc69f", "secondary-fixed-dim": "#ffb37c", "error": "#b41340", "outline": "#856e98", "on-surface": "#3a264b", "tertiary-container": "#6dfe9c", "tertiary-fixed-dim": "#5def8f", "on-tertiary": "#cdffd4", "on-primary-fixed-variant": "#390083", "primary": "#702ae1", "on-tertiary-fixed-variant": "#006a34", "inverse-primary": "#a476ff", "on-secondary": "#fff0e8", "surface-dim": "#e8c9ff", "tertiary-dim": "#005c2c", "surface-bright": "#fef3ff", "surface-tint": "#702ae1", "surface-variant": "#edd3ff", "surface-container-low": "#faecff", "on-tertiary-fixed": "#004a22", "primary-fixed-dim": "#a67aff", "surface-container-lowest": "#ffffff",
-                        "brand-lemon": "#FFF9C2",
-                        "brand-orange": "#F78105",
-                        "brand-pink": "#FF5C7A",
-                        "brand-cyan": "#249EA1",
-                        "brand-current": "#005F61"
+                        /* --- Oiler Palette --- */
+                        "oiler-orange": "#f56b2e",
+                        "oiler-mango":  "#f59a1e",
+                        "oiler-ocean":  "#c4e7e5",
+                        "oiler-blue":   "#253c96",
+                        "oiler-navy":   "#19244e",
+                        /* --- Legacy M3 tokens (kept for JS components) --- */
+                        "primary": "#253c96",
+                        "primary-dim": "#1a2e80",
+                        "primary-container": "#c4e7e5",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#19244e",
+                        "secondary": "#f59a1e",
+                        "secondary-container": "#fff0cc",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#19244e",
+                        "tertiary": "#f56b2e",
+                        "tertiary-container": "#fde8dc",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#19244e",
+                        "error": "#d32f2f",
+                        "error-container": "#fde8e8",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#7f0000",
+                        "surface": "#ffffff",
+                        "surface-dim": "#f0f4ff",
+                        "surface-bright": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#eef1f8",
+                        "surface-container": "#e8ecf6",
+                        "surface-container-high": "#dfe4f2",
+                        "surface-container-highest": "#d5dbee",
+                        "surface-variant": "#c4e7e5",
+                        "on-surface": "#19244e",
+                        "on-surface-variant": "#3a4a6b",
+                        "background": "#f0f4ff",
+                        "on-background": "#19244e",
+                        "outline": "#8898bb",
+                        "outline-variant": "#bccbe0",
+                        "inverse-surface": "#19244e",
+                        "inverse-on-surface": "#e8ecf6",
+                        "inverse-primary": "#c4e7e5"
                     },
                     fontFamily: {
-                        "headline": ["Plus Jakarta Sans"],
-                        "body": ["Be Vietnam Pro"],
-                        "label": ["Plus Jakarta Sans"]
+                        "headline": ["Syne", "Plus Jakarta Sans", "sans-serif"],
+                        "body":    ["DM Sans", "Be Vietnam Pro", "sans-serif"],
+                        "label":   ["Syne", "sans-serif"]
                     },
-                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                    borderRadius: {"DEFAULT": "0.75rem", "lg": "1.5rem", "xl": "2rem", "full": "9999px"},
                 },
             },
         }
@@ -32,33 +68,42 @@
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <style>
-      .bg-lemon-chiffon { background-color: #FFF9C2; }
-      .text-caribbean-current { color: #005F61; }
-      .text-uri-orange { color: #F78105; }
-      .text-bright-pink { color: #FF5C7A; }
-      .text-dark-cyan { color: #249EA1; }
-      .pulse-aura-on-hover:hover {
-        box-shadow: 0 0 20px rgba(112, 42, 225, 0.2);
-      }
-      .tactile-puck-feedback:active {
-        transform: scale(0.95);
-      }
-      .tonal-shift {
-        transition: background-color 0.3s ease;
-      }
+      /* Oiler palette utility aliases */
+      .text-oiler-orange { color: #f56b2e; }
+      .text-oiler-mango  { color: #f59a1e; }
+      .text-oiler-ocean  { color: #c4e7e5; }
+      .text-oiler-blue   { color: #253c96; }
+      .text-oiler-navy   { color: #19244e; }
+      .bg-oiler-orange { background-color: #f56b2e; }
+      .bg-oiler-mango  { background-color: #f59a1e; }
+      .bg-oiler-ocean  { background-color: #c4e7e5; }
+      .bg-oiler-blue   { background-color: #253c96; }
+      .bg-oiler-navy   { background-color: #19244e; }
+      /* Keep old alias classes mapped to new palette */
+      .text-caribbean-current { color: #253c96; }
+      .text-uri-orange   { color: #f56b2e; }
+      .text-bright-pink  { color: #f59a1e; }
+      .text-dark-cyan    { color: #c4e7e5; }
+      .bg-lemon-chiffon  { background-color: #f0f4ff; }
+      /* Utility */
       .glass-nav {
-         backdrop-filter: blur(12px);
-         -webkit-backdrop-filter: blur(12px);
+         backdrop-filter: blur(16px);
+         -webkit-backdrop-filter: blur(16px);
       }
-      .hide-scrollbar::-webkit-scrollbar {
-          display: none;
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      .answer-input.correct {
+        background-color: #d4f7e8 !important;
+        border-color: #1a7a4a !important;
+        color: #0d4f2e !important;
       }
-      .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+      .answer-input.incorrect {
+        background-color: #fde8dc !important;
+        border-color: #f56b2e !important;
+        color: #7f2200 !important;
       }
     </style>
     <!-- Confetti -->
@@ -66,7 +111,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#FFF9C2] dark:bg-slate-900 font-body text-on-surface min-h-screen flex flex-col relative overflow-x-hidden selection:bg-primary-container">
+<body class="bg-[#f0f4ff] font-body text-oiler-navy min-h-screen flex flex-col relative overflow-x-hidden selection:bg-oiler-ocean/40">
 
     <!-- Username Modal -->
     <div id="username-modal" class="fixed inset-0 bg-inverse-surface/80 backdrop-blur-sm z-[100] flex items-center justify-center hidden">
@@ -86,134 +131,112 @@
     <canvas id="confetti-canvas"></canvas>
 
     <!-- TopAppBar -->
-    <header class="flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50 bg-[#FFF9C2] dark:bg-slate-900 shadow-[0_40px_40px_-10px_rgba(58,38,75,0.06)] rounded-b-[3rem] transition-colors">
+    <header class="flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50 bg-[#19244e] text-white shadow-[0_8px_32px_rgba(25,36,78,0.25)] transition-colors">
         <div class="flex items-center gap-3">
-            <span class="text-2xl font-black text-[#F78105] tracking-tighter">KVizzing</span>
+            <span class="text-2xl font-headline font-black text-oiler-mango tracking-tight">KVizzing</span>
         </div>
-        <nav class="hidden md:flex items-center gap-8" id="desktop-nav">
-            <a onclick="switchTab('start')" class="nav-link cursor-pointer font-bold font-['Plus_Jakarta_Sans'] text-lg hover:text-[#F78105] transition-colors" data-tab="start">Play</a>
-            <a onclick="switchTab('stats')" class="nav-link cursor-pointer font-['Plus_Jakarta_Sans'] text-lg hover:text-[#F78105] transition-colors" data-tab="stats">Stats</a>
-            <a onclick="switchTab('store')" class="nav-link cursor-pointer font-['Plus_Jakarta_Sans'] text-lg hover:text-[#F78105] transition-colors" data-tab="store">Store</a>
-            <a onclick="switchTab('social')" class="nav-link cursor-pointer font-['Plus_Jakarta_Sans'] text-lg hover:text-[#F78105] transition-colors" data-tab="social">Social</a>
-            <a onclick="switchTab('community')" class="nav-link cursor-pointer font-['Plus_Jakarta_Sans'] text-lg hover:text-[#F78105] transition-colors" data-tab="community">Community</a>
+        <nav class="hidden md:flex items-center gap-6" id="desktop-nav">
+            <a onclick="switchTab('start')" class="nav-link cursor-pointer font-headline font-semibold text-base text-white/70 hover:text-oiler-mango transition-colors px-3 py-1.5 rounded-lg" data-tab="start">Play</a>
+            <a onclick="switchTab('stats')" class="nav-link cursor-pointer font-headline font-semibold text-base text-white/70 hover:text-oiler-mango transition-colors px-3 py-1.5 rounded-lg" data-tab="stats">Stats</a>
+            <a onclick="switchTab('store')" class="nav-link cursor-pointer font-headline font-semibold text-base text-white/70 hover:text-oiler-mango transition-colors px-3 py-1.5 rounded-lg" data-tab="store">Store</a>
+            <a onclick="switchTab('social')" class="nav-link cursor-pointer font-headline font-semibold text-base text-white/70 hover:text-oiler-mango transition-colors px-3 py-1.5 rounded-lg" data-tab="social">Social</a>
+            <a onclick="switchTab('community')" class="nav-link cursor-pointer font-headline font-semibold text-base text-white/70 hover:text-oiler-mango transition-colors px-3 py-1.5 rounded-lg" data-tab="community">Community</a>
         </nav>
-        <div class="flex items-center gap-4">
-            <button id="sound-toggle" onclick="toggleSound()" class="sound-toggle material-symbols-outlined text-[#005F61] dark:text-[#249EA1] text-2xl hover:scale-95 transition-transform duration-200" title="Toggle Sound" style="font-variation-settings: 'FILL' 1;">volume_up</button>
-            <div id="header-wallet" class="flex items-center gap-1.5 bg-[#ffc69f]/30 px-3 py-1.5 rounded-full cursor-pointer transition-colors" onclick="switchTab('store')">
-                <span class="material-symbols-outlined text-[#F78105] text-lg" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
-                <span id="header-wallet-balance" class="font-headline font-bold text-[#F78105] text-sm">0</span>
+        <div class="flex items-center gap-3">
+            <button id="sound-toggle" onclick="toggleSound()" class="sound-toggle material-symbols-outlined text-white/60 text-2xl hover:text-oiler-mango transition-colors" title="Toggle Sound" style="font-variation-settings: 'FILL' 1;">volume_up</button>
+            <div id="header-wallet" class="flex items-center gap-1.5 bg-oiler-mango/20 px-3 py-1.5 rounded-full cursor-pointer hover:bg-oiler-mango/30 transition-colors" onclick="switchTab('store')">
+                <span class="material-symbols-outlined text-oiler-mango text-lg" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+                <span id="header-wallet-balance" class="font-headline font-bold text-oiler-mango text-sm">0</span>
             </div>
-            <button onclick="switchTab('social')" class="material-symbols-outlined text-[#005F61] dark:text-[#249EA1] text-2xl hover:scale-95 transition-transform duration-200">leaderboard</button>
-            <button onclick="switchTab('stats')" class="w-10 h-10 rounded-full overflow-hidden border-2 border-[#F78105] hover:scale-95 transition-transform duration-200">
-                <img alt="User profile avatar" class="w-full h-full object-cover" data-alt="User Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCccZgP8k4cnHmmPsSxbJbZdxcR8YLTBspBQ7UXRvn0BvoKX4gl7fF2NzGqi3Npi1vv1UujDLenmpk8bOnoZBWyfyPPwEPTbSYmFWX9U9o54FQHYVXABdENeAhyOzVf0EbdviAc9zsQ9yzHBMaHLPatFdBWHW6lZwPDgTtwDLKsUrl_QPDEV3kdAgpEeEwaU8Ig_gVyY9_mqP47cLBti6zH-TWq6a3Z5IoHAFI5beQU1EMDDXf-l9i_dKXMbTi7Z28yPaPHTlRBkt4"/>
+            <button onclick="switchTab('social')" class="material-symbols-outlined text-white/60 text-2xl hover:text-oiler-mango transition-colors">leaderboard</button>
+            <button onclick="switchTab('stats')" class="w-9 h-9 rounded-full overflow-hidden border-2 border-oiler-mango hover:scale-95 transition-transform">
+                <img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCccZgP8k4cnHmmPsSxbJbZdxcR8YLTBspBQ7UXRvn0BvoKX4gl7fF2NzGqi3Npi1vv1UujDLenmpk8bOnoZBWyfyPPwEPTbSYmFWX9U9o54FQHYVXABdENeAhyOzVf0EbdviAc9zsQ9yzHBMaHLPatFdBWHW6lZwPDgTtwDLKsUrl_QPDEV3kdAgpEeEwaU8Ig_gVyY9_mqP47cLBti6zH-TWq6a3Z5IoHAFI5beQU1EMDDXf-l9i_dKXMbTi7Z28yPaPHTlRBkt4"/>
             </button>
         </div>
     </header>
 
     <!-- Start Screen -->
     <div id="start-screen">
-        <main class="flex-grow pt-24 pb-32 px-6 flex flex-col items-center max-w-2xl mx-auto w-full relative">
+        <main class="flex-grow pt-28 pb-32 px-6 flex flex-col items-center max-w-2xl mx-auto w-full relative">
             
             <!-- Hero Section -->
-            <section class="text-center mb-12 mt-8">
-                <div class="mb-6 relative inline-block">
-                    <div class="absolute -top-4 -right-6 w-12 h-12 bg-brand-pink rounded-full opacity-20 blur-xl"></div>
-                    <h1 class="text-6xl font-black text-uri-orange font-headline tracking-tighter leading-none mb-4">
-                        KVizzing
-                    </h1>
-                </div>
-                <p class="text-xl font-medium text-caribbean-current opacity-80 font-headline">
+            <section class="text-center mb-10 mt-4">
+                <h1 class="text-5xl font-headline font-black text-oiler-navy tracking-tight leading-none mb-3">
+                    KVizzing
+                </h1>
+                <p class="text-base font-body text-oiler-blue/70">
                     Ready to test your knowledge?
                 </p>
             </section>
             
-            <!-- Bento Grid for Game Modes -->
-            <div class="grid grid-cols-2 gap-4 w-full mb-8 mode-selection">
+            <!-- Game Mode Selector -->
+            <div class="grid grid-cols-2 gap-3 w-full mb-6 mode-selection">
                 <!-- Quick 10 Card -->
-                <button id="mode-quick" onclick="selectMode('quick')" class="mode-card col-span-1 bg-surface-container-lowest p-6 rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] border-2 border-transparent hover:border-brand-pink transition-all group cursor-pointer relative overflow-hidden flex flex-col text-left items-start">
-                    <div class="absolute -right-4 -top-4 text-brand-pink opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-outlined !text-8xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
-                    </div>
-                    <div class="bg-brand-pink/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-brand-pink">
+                <button id="mode-quick" onclick="selectMode('quick')" class="mode-card col-span-1 bg-white p-5 rounded-xl shadow-sm border-2 border-oiler-blue/10 hover:border-oiler-orange transition-all group cursor-pointer flex flex-col text-left items-start">
+                    <div class="bg-oiler-orange/10 w-11 h-11 rounded-xl flex items-center justify-center mb-3 text-oiler-orange">
                         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
                     </div>
-                    <h3 class="text-lg font-bold text-on-surface font-headline mb-1">Quick 10</h3>
-                    <p class="text-xs text-on-surface-variant">Rapid fire sprint</p>
+                    <h3 class="text-base font-headline font-bold text-oiler-navy mb-0.5">Quick 10</h3>
+                    <p class="text-xs text-oiler-blue/60">Rapid fire sprint</p>
                 </button>
-                
                 <!-- Marathon Card -->
-                <button id="mode-marathon" onclick="selectMode('marathon')" class="mode-card col-span-1 bg-surface-container-lowest p-6 rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] border-2 border-transparent hover:border-dark-cyan transition-all group cursor-pointer relative overflow-hidden flex flex-col text-left items-start">
-                    <div class="absolute -right-4 -top-4 text-dark-cyan opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-outlined !text-8xl" style="font-variation-settings: 'FILL' 1;">timer</span>
-                    </div>
-                    <div class="bg-brand-cyan/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-dark-cyan">
+                <button id="mode-marathon" onclick="selectMode('marathon')" class="mode-card col-span-1 bg-white p-5 rounded-xl shadow-sm border-2 border-oiler-blue/10 hover:border-oiler-blue transition-all group cursor-pointer flex flex-col text-left items-start">
+                    <div class="bg-oiler-blue/10 w-11 h-11 rounded-xl flex items-center justify-center mb-3 text-oiler-blue">
                         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">timer</span>
                     </div>
-                    <h3 class="text-lg font-bold text-on-surface font-headline mb-1">Marathon</h3>
-                    <p class="text-xs text-on-surface-variant">How long can you last?</p>
+                    <h3 class="text-base font-headline font-bold text-oiler-navy mb-0.5">Marathon</h3>
+                    <p class="text-xs text-oiler-blue/60">How long can you last?</p>
                 </button>
-
-                <!-- Daily Challenge Feature Card -->
-                <button id="mode-daily" onclick="startDailyChallenge()" class="mode-card col-span-2 relative h-48 rounded-xl overflow-hidden shadow-lg cursor-pointer text-left block w-full border-2 border-transparent">
-                    <img alt="Trivia night" class="w-full h-full object-cover" data-alt="Modern abstract illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkLaMD6M3X08S8-MrfULHP34tmOE0hdtFxhnjQpK25alM10XOUJMO-VLMyfUgke9cTf0VQbaXpe1Z0-ItYMfiQLCe1jHIzcyinNOtYosIzxhPPprD3E05NvU3pSoAtUSOTl0RyA5hAsa1VDkrIxlm_QynFMz9NZJfcbqdV_YYJcAIteLznqy8xjIsciUT0x8AdShV1Q1LkeYII_EaupeUSav8K_M6uEiFMO17zKa4FGqcqHNW0VLdTMg_7QRcJCl1fIkBDKiSW1n0"/>
-                    <div class="absolute inset-0 bg-gradient-to-t from-brand-current/80 to-transparent flex flex-col justify-end p-6">
-                        <span class="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">Featured Daily Challenge</span>
-                        <h4 class="text-white text-xl font-bold font-headline">Science &amp; Tech Wizards</h4>
+                <!-- Daily Challenge Card -->
+                <button id="mode-daily" onclick="startDailyChallenge()" class="mode-card col-span-2 bg-gradient-to-r from-oiler-navy to-oiler-blue p-5 rounded-xl shadow-lg cursor-pointer flex items-center gap-4 border-2 border-transparent hover:brightness-110 transition-all">
+                    <div class="bg-oiler-mango/20 w-12 h-12 rounded-xl flex items-center justify-center text-oiler-mango shrink-0">
+                        <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">today</span>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-oiler-mango text-xs font-headline font-bold uppercase tracking-widest">Daily Challenge</span>
+                        <h4 class="text-white text-lg font-headline font-bold">Science &amp; Tech Wizards</h4>
                     </div>
                 </button>
             </div>
 
             <!-- Category Filter Chips -->
-            <div class="w-full mb-4 relative z-10 bg-white/40 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                <p class="font-label text-xs uppercase tracking-widest text-caribbean-current opacity-60 mb-2 font-bold">Categories</p>
+            <div class="w-full mb-4 bg-white rounded-xl p-4 border border-oiler-blue/8 shadow-sm">
+                <p class="text-[10px] uppercase tracking-widest text-oiler-blue/50 mb-2.5 font-headline font-bold">Categories</p>
                 <div id="category-chips" class="flex flex-wrap gap-2">
-                    <button onclick="toggleCategory('all')" class="category-chip active px-4 py-2 rounded-full text-xs font-headline font-bold transition-all" data-cat="all">All</button>
-                    <button onclick="toggleCategory('history')" class="category-chip px-4 py-2 rounded-full text-xs font-headline font-bold transition-all" data-cat="history">History</button>
-                    <button onclick="toggleCategory('science')" class="category-chip px-4 py-2 rounded-full text-xs font-headline font-bold transition-all" data-cat="science">Science</button>
-                    <button onclick="toggleCategory('tech')" class="category-chip px-4 py-2 rounded-full text-xs font-headline font-bold transition-all" data-cat="tech">Tech & Math</button>
-                    <button onclick="toggleCategory('pop_culture')" class="category-chip px-4 py-2 rounded-full text-xs font-headline font-bold transition-all" data-cat="pop_culture">Pop Culture</button>
-                    <button onclick="toggleCategory('language')" class="category-chip px-4 py-2 rounded-full text-xs font-headline font-bold transition-all" data-cat="language">Etymology</button>
+                    <button onclick="toggleCategory('all')" class="category-chip active px-3 py-1.5 rounded-full text-xs font-headline font-bold transition-all" data-cat="all">All</button>
+                    <button onclick="toggleCategory('history')" class="category-chip px-3 py-1.5 rounded-full text-xs font-headline font-bold transition-all" data-cat="history">History</button>
+                    <button onclick="toggleCategory('science')" class="category-chip px-3 py-1.5 rounded-full text-xs font-headline font-bold transition-all" data-cat="science">Science</button>
+                    <button onclick="toggleCategory('tech')" class="category-chip px-3 py-1.5 rounded-full text-xs font-headline font-bold transition-all" data-cat="tech">Tech &amp; Math</button>
+                    <button onclick="toggleCategory('pop_culture')" class="category-chip px-3 py-1.5 rounded-full text-xs font-headline font-bold transition-all" data-cat="pop_culture">Pop Culture</button>
+                    <button onclick="toggleCategory('language')" class="category-chip px-3 py-1.5 rounded-full text-xs font-headline font-bold transition-all" data-cat="language">Etymology</button>
                 </div>
             </div>
-
             <!-- Difficulty Selector -->
-            <div class="w-full mb-8 relative z-10 bg-white/40 backdrop-blur-md rounded-xl p-4 border border-white/20">
-                <p class="font-label text-xs uppercase tracking-widest text-caribbean-current opacity-60 mb-2 font-bold">Difficulty</p>
+            <div class="w-full mb-6 bg-white rounded-xl p-4 border border-oiler-blue/8 shadow-sm">
+                <p class="text-[10px] uppercase tracking-widest text-oiler-blue/50 mb-2.5 font-headline font-bold">Difficulty</p>
                 <div class="flex gap-2" id="difficulty-selector">
-                    <button onclick="selectDifficulty('easy')" class="difficulty-btn flex-1 py-2 rounded-lg text-xs font-headline font-bold transition-all bg-green-100 text-green-800" data-diff="easy">
-                        Easy <span class="opacity-70 font-normal ml-1">1x</span>
-                    </button>
-                    <button onclick="selectDifficulty('medium')" class="difficulty-btn selected flex-1 py-2 rounded-lg text-xs font-headline font-bold transition-all bg-yellow-100 text-yellow-800" data-diff="medium">
-                        Medium <span class="opacity-70 font-normal ml-1">2x</span>
-                    </button>
-                    <button onclick="selectDifficulty('hard')" class="difficulty-btn flex-1 py-2 rounded-lg text-xs font-headline font-bold transition-all bg-red-100 text-red-800" data-diff="hard">
-                        Hard <span class="opacity-70 font-normal ml-1">3x</span>
-                    </button>
+                    <button onclick="selectDifficulty('easy')" class="difficulty-btn flex-1 py-2.5 rounded-lg text-xs font-headline font-bold transition-all bg-emerald-50 text-emerald-700 border border-emerald-200" data-diff="easy">Easy <span class="opacity-60 font-normal ml-1">1x</span></button>
+                    <button onclick="selectDifficulty('medium')" class="difficulty-btn selected flex-1 py-2.5 rounded-lg text-xs font-headline font-bold transition-all bg-oiler-mango/10 text-oiler-navy border border-oiler-mango/30" data-diff="medium">Medium <span class="opacity-60 font-normal ml-1">2x</span></button>
+                    <button onclick="selectDifficulty('hard')" class="difficulty-btn flex-1 py-2.5 rounded-lg text-xs font-headline font-bold transition-all bg-oiler-orange/10 text-oiler-orange border border-oiler-orange/20" data-diff="hard">Hard <span class="opacity-60 font-normal ml-1">3x</span></button>
                 </div>
             </div>
 
             <!-- Main CTA -->
-            <button id="start-btn" class="w-full bg-brand-orange text-white py-5 rounded-xl font-headline font-extrabold text-xl shadow-[0_10px_30px_rgba(247,129,5,0.3)] hover:scale-[0.98] active:scale-95 transition-all mb-8 flex items-center justify-center gap-3">
+            <button id="start-btn" class="w-full bg-oiler-orange text-white py-5 rounded-xl font-headline font-extrabold text-xl shadow-[0_8px_24px_rgba(245,107,46,0.35)] hover:bg-oiler-orange/90 active:scale-95 transition-all mb-6 flex items-center justify-center gap-3">
                 Start Quiz
                 <span class="material-symbols-outlined">play_arrow</span>
             </button>
-            
             <!-- Stats Tracker -->
-            <div class="w-full bg-white/40 backdrop-blur-md rounded-xl p-6 flex items-center justify-between border border-white/20 relative z-10">
+            <div class="w-full bg-white rounded-xl p-5 flex items-center justify-between border border-oiler-blue/8 shadow-sm">
                 <div>
-                    <p class="text-[10px] uppercase tracking-widest font-bold text-caribbean-current opacity-60 mb-1">Lifetime Knowledge Earned</p>
+                    <p class="text-[10px] uppercase tracking-widest font-headline font-bold text-oiler-blue/50 mb-1">Lifetime Points</p>
                     <div class="flex items-baseline gap-2">
-                        <span id="total-games-display" class="text-3xl font-black text-caribbean-current font-headline tracking-tight">0</span>
-                        <span class="text-sm font-bold text-brand-pink font-headline">XP</span>
+                        <span id="total-games-display" class="text-3xl font-black text-oiler-navy font-headline">0</span>
+                        <span class="text-sm font-bold text-oiler-orange font-headline">XP</span>
                     </div>
                 </div>
-                <div class="flex -space-x-3">
-                    <div class="w-10 h-10 rounded-full border-2 border-lemon-chiffon overflow-hidden">
-                        <img alt="user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaSPWMkIGA-1GvVoHcczHXdWEnxlUzO8CF5rEaKux1b3yt5pqf0CxAo2qbuCjPZm9l6UEauUfcj5aS7oRe1tiN-Vh1JxTBS7KElnaYfx7s5qSyGckhj_QO9WsULSA7Ub4H9oJc_t3CTJVb2G-89vXwxPYq0brL7ODwS-QeSUs47SuZZVMdnzeO67nSzMs8YLMQK6LBNvX7hNZKPfX9IKdQX_Zytok-kxivd1vd-Gy6NJcacg-rDb_WqhICca6B-ej4kpDEqF6kDGM"/>
-                    </div>
-                    <div class="w-10 h-10 rounded-full border-2 border-lemon-chiffon overflow-hidden bg-brand-cyan flex items-center justify-center text-white text-xs font-bold shadow-inner">
-                        <span class="material-symbols-outlined text-sm">stars</span>
-                    </div>
+                <div class="bg-oiler-ocean/50 px-4 py-2 rounded-lg">
+                    <span class="material-symbols-outlined text-oiler-blue" style="font-variation-settings: 'FILL' 1;">stars</span>
                 </div>
             </div>
             
@@ -222,10 +245,10 @@
 
     <!-- Quiz Screen -->
     <div id="quiz-screen" class="hidden">
-        <main class="flex-grow pt-24 pb-32 px-6 flex flex-col max-w-2xl mx-auto w-full relative">
+        <main class="flex-grow pt-28 pb-32 px-6 flex flex-col max-w-2xl mx-auto w-full relative">
             <!-- Header & Progress -->
             <div class="flex justify-between items-center mb-8 relative z-10 w-full mt-4">
-                <button onclick="switchTab('start')" class="w-12 h-12 bg-white/50 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-caribbean-current hover:bg-white/80 transition-all shadow-sm">
+                <button onclick="switchTab('start')" class="w-11 h-11 bg-white border border-oiler-blue/10 rounded-full flex items-center justify-center text-oiler-navy hover:bg-oiler-ocean/20 transition-all shadow-sm">
                     <span class="material-symbols-outlined">close</span>
                 </button>
                 <div class="bg-white/50 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 shadow-sm flex items-center gap-3">
@@ -348,7 +371,7 @@
 
     <!-- Stats / Profile Screen -->
     <div id="stats-screen" class="hidden">
-        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-32 min-h-screen relative z-10 w-full">
+        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-28 pb-32 min-h-screen relative z-10 w-full">
             
             <!-- Profile Card -->
             <div class="bg-surface-container rounded-xl p-6 sm:p-8 mb-6 sm:mb-8 relative overflow-hidden">
@@ -431,7 +454,7 @@
 
     <!-- Store Screen -->
     <div id="store-screen" class="hidden">
-        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-32 min-h-screen relative z-10 w-full">
+        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-28 pb-32 min-h-screen relative z-10 w-full">
             <div class="flex justify-between items-center mb-6 sm:mb-8">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-headline font-black text-on-surface">KVizzing Store</h2>
                 <div class="bg-primary-container/20 px-3 sm:px-4 py-2 rounded-full flex items-center gap-2">
@@ -540,7 +563,7 @@
 
     <!-- Community Screen -->
     <div id="community-screen" class="hidden">
-        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-32 min-h-screen relative z-10 w-full">
+        <main class="max-w-screen-xl mx-auto px-4 sm:px-6 pt-28 pb-32 min-h-screen relative z-10 w-full">
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 sm:mb-8 gap-4">
                 <div>
                     <h2 class="text-2xl sm:text-3xl md:text-4xl font-headline font-black text-on-surface mb-2">Community Questions</h2>
@@ -590,28 +613,26 @@
     </div>
 
     <!-- Mobile Nav -->
-    <nav class="md:hidden bg-white/90 backdrop-blur-2xl fixed bottom-0 w-full rounded-t-[2rem] z-50 shadow-[0_-20px_60px_rgba(36,158,161,0.08)] border-t border-brand-cyan/10 safe-area-bottom">
-        <div class="flex justify-around items-center px-2 pb-6 pt-3" id="mobile-nav">
-            <!-- Active Tab -->
-            <a onclick="switchTab('start')" class="nav-icon cursor-pointer flex flex-col items-center justify-center bg-brand-lemon text-brand-orange rounded-3xl px-6 py-2 transition-transform duration-300 shadow-sm" data-tab="start">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">videogame_asset</span>
-                <span class="font-headline font-bold text-[11px] uppercase tracking-widest mt-1">Play</span>
+    <nav class="md:hidden bg-oiler-navy fixed bottom-0 w-full rounded-t-2xl z-50 shadow-[0_-8px_24px_rgba(25,36,78,0.2)] safe-area-bottom">
+        <div class="flex justify-around items-center px-2 pb-5 pt-3" id="mobile-nav">
+            <a onclick="switchTab('start')" class="nav-icon cursor-pointer flex flex-col items-center justify-center bg-oiler-mango text-oiler-navy rounded-2xl px-5 py-2 transition-all duration-300" data-tab="start">
+                <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">videogame_asset</span>
+                <span class="font-headline font-bold text-[10px] uppercase tracking-widest mt-1">Play</span>
             </a>
-            <!-- Inactive Tabs -->
-            <a onclick="switchTab('stats')" class="nav-icon cursor-pointer flex flex-col items-center justify-center text-caribbean-current/50 px-5 py-2 hover:scale-110 transition-transform duration-300 hover:text-caribbean-current" data-tab="stats">
-                <span class="material-symbols-outlined">query_stats</span>
+            <a onclick="switchTab('stats')" class="nav-icon cursor-pointer flex flex-col items-center justify-center text-white/40 px-5 py-2 hover:text-white transition-colors duration-300" data-tab="stats">
+                <span class="material-symbols-outlined text-xl">query_stats</span>
                 <span class="font-headline font-bold text-[10px] uppercase tracking-widest mt-1">Stats</span>
             </a>
-            <a onclick="switchTab('store')" class="nav-icon cursor-pointer flex flex-col items-center justify-center text-caribbean-current/50 px-5 py-2 hover:scale-110 transition-transform duration-300 hover:text-caribbean-current" data-tab="store">
-                <span class="material-symbols-outlined">shopping_bag</span>
+            <a onclick="switchTab('store')" class="nav-icon cursor-pointer flex flex-col items-center justify-center text-white/40 px-5 py-2 hover:text-white transition-colors duration-300" data-tab="store">
+                <span class="material-symbols-outlined text-xl">shopping_bag</span>
                 <span class="font-headline font-bold text-[10px] uppercase tracking-widest mt-1">Store</span>
             </a>
-            <a onclick="switchTab('social')" class="nav-icon cursor-pointer flex flex-col items-center justify-center text-caribbean-current/50 px-5 py-2 hover:scale-110 transition-transform duration-300 hover:text-caribbean-current" data-tab="social">
-                <span class="material-symbols-outlined">leaderboard</span>
+            <a onclick="switchTab('social')" class="nav-icon cursor-pointer flex flex-col items-center justify-center text-white/40 px-5 py-2 hover:text-white transition-colors duration-300" data-tab="social">
+                <span class="material-symbols-outlined text-xl">leaderboard</span>
                 <span class="font-headline font-bold text-[10px] uppercase tracking-widest mt-1">Ranks</span>
             </a>
-            <a onclick="switchTab('community')" class="nav-icon cursor-pointer flex flex-col items-center justify-center text-caribbean-current/50 px-5 py-2 hover:scale-110 transition-transform duration-300 hover:text-caribbean-current" data-tab="community">
-                <span class="material-symbols-outlined">forum</span>
+            <a onclick="switchTab('community')" class="nav-icon cursor-pointer flex flex-col items-center justify-center text-white/40 px-5 py-2 hover:text-white transition-colors duration-300" data-tab="community">
+                <span class="material-symbols-outlined text-xl">forum</span>
                 <span class="font-headline font-bold text-[10px] uppercase tracking-widest mt-1">Comm</span>
             </a>
         </div>

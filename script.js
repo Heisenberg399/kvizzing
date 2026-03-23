@@ -501,11 +501,11 @@ window.switchTab = function(tabName) {
     
     document.querySelectorAll('#mobile-nav .nav-icon').forEach(el => {
         if(el.dataset.tab === tabName) {
-            el.classList.remove('text-caribbean-current\/50');
-            el.classList.add('bg-brand-lemon', 'text-brand-orange', 'rounded-3xl', 'shadow-sm');
+            el.classList.remove('text-white\/40');
+            el.classList.add('bg-oiler-mango', 'text-oiler-navy', 'rounded-2xl');
         } else {
-            el.classList.add('text-caribbean-current\/50');
-            el.classList.remove('bg-brand-lemon', 'text-brand-orange', 'rounded-3xl', 'shadow-sm');
+            el.classList.add('text-white\/40');
+            el.classList.remove('bg-oiler-mango', 'text-oiler-navy', 'rounded-2xl');
         }
     });
 
