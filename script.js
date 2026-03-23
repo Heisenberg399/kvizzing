@@ -13,7 +13,10 @@ let gameState = {
     mode: 'quick', // 'quick' or 'marathon'
     totalQuestions: 0,
     hintUsed: false,
-    audioEnabled: true
+    audioEnabled: true,
+    selectedCategories: ['all'],
+    difficulty: 'medium',
+    pointMultiplier: 2
 };
 
 // --- DOM Elements ---
@@ -177,18 +180,28 @@ function selectMode(mode) {
 function startQuiz() {
     audio.unlock(); // Ensure audio context is ready
 
-    // Prepare questions
-    const allQuestions = [...quizData];
+    // Filter by category
+    let filtered = [...quizData];
+    if (!gameState.selectedCategories.includes('all')) {
+        filtered = filtered.filter(q => gameState.selectedCategories.includes(q.category));
+    }
+    // Filter by difficulty
+    if (gameState.difficulty !== 'all') {
+        filtered = filtered.filter(q => q.difficulty === gameState.difficulty);
+    }
+    // Fallback: if no questions match, use all
+    if (filtered.length === 0) filtered = [...quizData];
+
     // Fisher-Yates Shuffle
-    for (let i = allQuestions.length - 1; i > 0; i--) {
+    for (let i = filtered.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
     }
 
     if (gameState.mode === 'quick') {
-        gameState.questions = allQuestions.slice(0, CONFIG.quickModeCount);
+        gameState.questions = filtered.slice(0, CONFIG.quickModeCount);
     } else {
-        gameState.questions = allQuestions;
+        gameState.questions = filtered;
     }
 
     gameState.totalQuestions = gameState.questions.length;
@@ -357,11 +370,15 @@ function endGame() {
     DOM.finalScoreTotal.textContent = `/ ${gameState.totalQuestions}`;
     
     // Post to backend
+    const perfectGame = (gameState.mode === 'quick' && gameState.score === CONFIG.quickModeCount);
+    const totalScore = gameState.score * gameState.pointMultiplier;
+    DOM.finalScore.textContent = totalScore;
+    DOM.finalScoreTotal.textContent = `/ ${gameState.totalQuestions * gameState.pointMultiplier}`;
     fetch('/api/stats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ score: gameState.score, streak: gameState.highestStreak })
+        body: JSON.stringify({ score: totalScore, streak: gameState.highestStreak, perfectGame })
     }).then(res => res.json()).then(data => {
         DOM.highestStreakDisplay.textContent = gameState.highestStreak;
         DOM.lifetimeStreakDisplay.textContent = data.highestStreak;
@@ -528,6 +545,12 @@ async function loadStats() {
 
         // Update header wallet too
         updateWalletDisplay(stats.lifetimeKnowledge);
+
+        // Update rank display
+        updateRankDisplay(stats.lifetimeKnowledge);
+
+        // Load achievements
+        loadAchievements();
     } catch (e) {
         console.error(e);
     }
@@ -814,4 +837,118 @@ function isAnswerClose(userStr, correctStr) {
     if (normCorrect.length <= 4) return dist <= 1;
     else if (normCorrect.length <= 8) return dist <= 2;
     else return dist <= 3;
+}
+
+// --- XP Rank System ---
+const RANKS = [
+    { name: 'Bronze', icon: 'shield', color: '#cd7f32', minPoints: 0, maxPoints: 499 },
+    { name: 'Silver', icon: 'shield', color: '#c0c0c0', minPoints: 500, maxPoints: 1499 },
+    { name: 'Gold', icon: 'military_tech', color: '#ffd700', minPoints: 1500, maxPoints: 3999 },
+    { name: 'Diamond', icon: 'diamond', color: '#b9f2ff', minPoints: 4000, maxPoints: Infinity }
+];
+
+function getRank(points) {
+    for (let i = RANKS.length - 1; i >= 0; i--) {
+        if (points >= RANKS[i].minPoints) return { ...RANKS[i], index: i };
+    }
+    return { ...RANKS[0], index: 0 };
+}
+
+function updateRankDisplay(points) {
+    const rank = getRank(points);
+    const nextRank = RANKS[rank.index + 1];
+    
+    const rankIcon = document.getElementById('rank-icon');
+    const rankName = document.getElementById('rank-name');
+    const progressBar = document.getElementById('rank-progress-bar');
+    const progressText = document.getElementById('rank-progress-text');
+    
+    if (rankIcon) {
+        rankIcon.textContent = rank.icon;
+        rankIcon.style.color = rank.color;
+    }
+    if (rankName) {
+        rankName.textContent = rank.name;
+        rankName.style.color = rank.color;
+    }
+    if (progressBar && nextRank) {
+        const progress = ((points - rank.minPoints) / (nextRank.minPoints - rank.minPoints)) * 100;
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
+    } else if (progressBar) {
+        progressBar.style.width = '100%';
+    }
+    if (progressText) {
+        if (nextRank) {
+            progressText.textContent = `${points} / ${nextRank.minPoints} to ${nextRank.name}`;
+        } else {
+            progressText.textContent = `${points} pts — Max Rank!`;
+        }
+    }
+}
+
+// --- Category Selection ---
+window.toggleCategory = function(cat) {
+    if (cat === 'all') {
+        gameState.selectedCategories = ['all'];
+    } else {
+        // Remove 'all' if selecting a specific category
+        gameState.selectedCategories = gameState.selectedCategories.filter(c => c !== 'all');
+        const idx = gameState.selectedCategories.indexOf(cat);
+        if (idx >= 0) {
+            gameState.selectedCategories.splice(idx, 1);
+        } else {
+            gameState.selectedCategories.push(cat);
+        }
+        // If empty, revert to all
+        if (gameState.selectedCategories.length === 0) {
+            gameState.selectedCategories = ['all'];
+        }
+    }
+    // Update chip visuals
+    document.querySelectorAll('.category-chip').forEach(chip => {
+        const chipCat = chip.dataset.cat;
+        if (gameState.selectedCategories.includes(chipCat)) {
+            chip.classList.add('active');
+        } else {
+            chip.classList.remove('active');
+        }
+    });
+};
+
+// --- Difficulty Selection ---
+window.selectDifficulty = function(diff) {
+    gameState.difficulty = diff;
+    gameState.pointMultiplier = diff === 'easy' ? 1 : diff === 'medium' ? 2 : 3;
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        if (btn.dataset.diff === diff) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
+    });
+};
+
+// --- Achievements ---
+async function loadAchievements() {
+    try {
+        const res = await fetch(`${API_BASE}/achievements`, { credentials: 'include' });
+        const achievements = await res.json();
+        const grid = document.getElementById('achievements-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        achievements.forEach(ach => {
+            const statusClass = ach.unlocked ? 'unlocked' : 'locked';
+            grid.innerHTML += `
+                <div class="achievement-card ${statusClass} bg-surface-container rounded-xl p-4 sm:p-5 flex flex-col items-center text-center gap-2">
+                    <div class="w-12 h-12 rounded-full ${ach.unlocked ? 'bg-primary-container' : 'bg-surface-container-highest'} flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl ${ach.unlocked ? 'text-primary' : 'text-outline'}" style="font-variation-settings: 'FILL' 1;">${ach.icon}</span>
+                    </div>
+                    <h4 class="font-headline font-bold text-sm text-on-surface">${ach.title}</h4>
+                    <p class="text-[10px] font-label text-on-surface-variant">${ach.description}</p>
+                </div>
+            `;
+        });
+    } catch (e) {
+        console.error('Failed to load achievements:', e);
+    }
 }

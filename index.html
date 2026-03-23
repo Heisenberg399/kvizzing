@@ -100,6 +100,36 @@
                     <p class="text-on-surface-variant font-medium text-sm sm:text-base">Answer all questions! How long can you last?</p>
                 </button>
             </div>
+
+            <!-- Category Filter Chips -->
+            <div class="w-full mb-4 relative z-10">
+                <p class="text-center font-label text-xs uppercase tracking-widest text-on-surface-variant mb-3">Categories</p>
+                <div id="category-chips" class="flex flex-wrap justify-center gap-2">
+                    <button onclick="toggleCategory('all')" class="category-chip active px-4 py-2 rounded-full text-sm font-headline font-bold transition-all" data-cat="all">All</button>
+                    <button onclick="toggleCategory('etymology')" class="category-chip px-4 py-2 rounded-full text-sm font-headline font-bold transition-all" data-cat="etymology">Etymology</button>
+                    <button onclick="toggleCategory('history')" class="category-chip px-4 py-2 rounded-full text-sm font-headline font-bold transition-all" data-cat="history">History</button>
+                    <button onclick="toggleCategory('science')" class="category-chip px-4 py-2 rounded-full text-sm font-headline font-bold transition-all" data-cat="science">Science</button>
+                    <button onclick="toggleCategory('tech')" class="category-chip px-4 py-2 rounded-full text-sm font-headline font-bold transition-all" data-cat="tech">Tech</button>
+                    <button onclick="toggleCategory('pop_culture')" class="category-chip px-4 py-2 rounded-full text-sm font-headline font-bold transition-all" data-cat="pop_culture">Pop Culture</button>
+                    <button onclick="toggleCategory('language')" class="category-chip px-4 py-2 rounded-full text-sm font-headline font-bold transition-all" data-cat="language">Language</button>
+                </div>
+            </div>
+
+            <!-- Difficulty Selector -->
+            <div class="w-full mb-6 relative z-10">
+                <p class="text-center font-label text-xs uppercase tracking-widest text-on-surface-variant mb-3">Difficulty</p>
+                <div class="flex justify-center gap-3" id="difficulty-selector">
+                    <button onclick="selectDifficulty('easy')" class="difficulty-btn px-5 py-2.5 rounded-xl text-sm font-headline font-bold transition-all bg-tertiary-container text-on-tertiary-container" data-diff="easy">
+                        Easy <span class="text-xs opacity-70">1x</span>
+                    </button>
+                    <button onclick="selectDifficulty('medium')" class="difficulty-btn selected px-5 py-2.5 rounded-xl text-sm font-headline font-bold transition-all bg-secondary-container text-on-secondary-container" data-diff="medium">
+                        Medium <span class="text-xs opacity-70">2x</span>
+                    </button>
+                    <button onclick="selectDifficulty('hard')" class="difficulty-btn px-5 py-2.5 rounded-xl text-sm font-headline font-bold transition-all bg-error-container text-on-error-container" data-diff="hard">
+                        Hard <span class="text-xs opacity-70">3x</span>
+                    </button>
+                </div>
+            </div>
             
             <div class="relative z-10 w-full flex justify-center mb-10 sm:mb-16">
                 <button id="start-btn" class="bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline text-xl sm:text-2xl font-extrabold px-10 sm:px-16 py-5 sm:py-6 rounded-full shadow-[0_25px_50px_-12px_rgba(112,42,225,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3 sm:gap-4">
@@ -273,7 +303,16 @@
                             <h2 id="profile-username" class="text-2xl sm:text-3xl font-headline font-black text-on-surface">Guest</h2>
                             <button onclick="openRenameModal()" class="material-symbols-outlined text-outline hover:text-primary transition-colors text-xl p-1 rounded-full hover:bg-primary-container/20" title="Rename">edit</button>
                         </div>
-                        <p class="text-on-surface-variant font-medium text-sm mb-2">Quiz Enthusiast</p>
+                        <!-- Rank Badge -->
+                        <div class="flex items-center gap-2 mb-2">
+                            <span id="rank-icon" class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">shield</span>
+                            <span id="rank-name" class="font-headline font-bold text-sm uppercase tracking-wider">Bronze</span>
+                        </div>
+                        <!-- XP Progress Bar -->
+                        <div class="w-full bg-surface-container-highest rounded-full h-2.5 mb-2">
+                            <div id="rank-progress-bar" class="h-full rounded-full bg-gradient-to-r from-primary to-primary-container transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <p id="rank-progress-text" class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-wider mb-2">0 / 500 to Silver</p>
                         <button onclick="logoutUser()" class="flex items-center gap-1.5 text-xs font-label font-bold text-error hover:text-on-error-container hover:bg-error-container px-3 py-1.5 rounded-full transition-colors">
                             <span class="material-symbols-outlined text-sm">logout</span> Sign Out
                         </button>
@@ -321,6 +360,12 @@
                     <h3 class="text-on-surface-variant font-label font-bold text-[10px] sm:text-sm tracking-widest uppercase mb-1">Avg / Game</h3>
                     <p id="stat-avg-score" class="text-3xl sm:text-5xl font-black font-headline text-on-surface">0</p>
                 </div>
+            </div>
+
+            <!-- Achievements -->
+            <h3 class="text-xl sm:text-2xl font-headline font-bold mb-4 sm:mb-6 mt-8 text-on-surface-variant">Achievements</h3>
+            <div id="achievements-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                <!-- Dynamically populated -->
             </div>
         </main>
     </div>

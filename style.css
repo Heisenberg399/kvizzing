@@ -193,3 +193,50 @@ html.dark .answer-input::placeholder {
 .sound-toggle.muted {
     opacity: 0.5;
 }
+
+/* ===== Category Chips ===== */
+.category-chip {
+    background-color: #f5e2ff;
+    color: #69537b;
+    border: 2px solid transparent;
+}
+.category-chip.active {
+    background-color: #702ae1;
+    color: #f8f0ff;
+    border-color: #702ae1;
+    box-shadow: 0 4px 12px rgba(112, 42, 225, 0.3);
+}
+.category-chip:hover:not(.active) {
+    background-color: #edd3ff;
+    border-color: #bda3d1;
+}
+
+/* ===== Difficulty Buttons ===== */
+.difficulty-btn {
+    opacity: 0.5;
+    transform: scale(0.95);
+    border: 2px solid transparent;
+}
+.difficulty-btn.selected {
+    opacity: 1;
+    transform: scale(1);
+    border-color: currentColor;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Achievement Badges ===== */
+.achievement-card {
+    transition: all 0.3s ease;
+}
+.achievement-card.locked {
+    opacity: 0.4;
+    filter: grayscale(1);
+}
+.achievement-card.unlocked {
+    opacity: 1;
+}
+.achievement-card.unlocked:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(112, 42, 225, 0.15);
+}
+

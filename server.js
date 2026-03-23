@@ -54,6 +54,27 @@ const StoreItem = mongoose.model('StoreItem', storeItemSchema);
 const UserPurchase = mongoose.model('UserPurchase', userPurchaseSchema);
 const SocialEntry = mongoose.model('SocialEntry', socialSchema);
 
+// Achievement schema
+const userAchievementSchema = new mongoose.Schema({
+    userId: { type: String, required: true },
+    achievementId: { type: Number, required: true },
+    unlockedAt: { type: Date, default: Date.now }
+});
+userAchievementSchema.index({ userId: 1, achievementId: 1 }, { unique: true });
+const UserAchievement = mongoose.model('UserAchievement', userAchievementSchema);
+
+// Achievement definitions
+const ACHIEVEMENTS = [
+    { id: 1, title: 'First Steps', description: 'Complete your first quiz', icon: 'flag', condition: (s) => s.gamesPlayed >= 1 },
+    { id: 2, title: 'Quiz Regular', description: 'Complete 10 quizzes', icon: 'sports_esports', condition: (s) => s.gamesPlayed >= 10 },
+    { id: 3, title: 'On Fire', description: 'Get a 5 answer streak', icon: 'local_fire_department', condition: (s) => s.highestStreak >= 5 },
+    { id: 4, title: 'Unstoppable', description: 'Get a 10 answer streak', icon: 'whatshot', condition: (s) => s.highestStreak >= 10 },
+    { id: 5, title: 'Century', description: 'Earn 100 total points', icon: 'military_tech', condition: (s) => s.lifetimeKnowledge >= 100 },
+    { id: 6, title: 'Knowledge Seeker', description: 'Earn 500 total points', icon: 'school', condition: (s) => s.lifetimeKnowledge >= 500 },
+    { id: 7, title: 'Scholar', description: 'Earn 1000 total points', icon: 'workspace_premium', condition: (s) => s.lifetimeKnowledge >= 1000 },
+    { id: 8, title: 'Perfect Round', description: 'Score 10/10 in Quick mode', icon: 'star', condition: (s, extra) => extra && extra.perfectGame }
+];
+
 // --- In-memory fallback ---
 let useMemoryDb = false;
 let memUsers = {};  // userId -> { username, stats, purchases, social }
@@ -64,7 +85,8 @@ function getMemUser(userId) {
             username: 'Guest',
             stats: { gamesPlayed: 0, highestStreak: 0, lifetimeKnowledge: 0 },
             purchases: [],
-            social: { name: 'Guest', score: 0 }
+            social: { name: 'Guest', score: 0 },
+            achievements: []
         };
     }
     return memUsers[userId];
@@ -213,6 +235,10 @@ app.post('/api/stats', async (req, res) => {
         // Update social entry
         await SocialEntry.updateOne({ userId }, { score: stats.lifetimeKnowledge });
 
+        // Check achievements
+        const extra = { perfectGame: req.body.perfectGame || false };
+        await checkAchievements(userId, stats, extra);
+
         res.json(stats);
     } catch (e) {
         res.status(500).json({ error: e.message });
@@ -301,6 +327,54 @@ app.get('/api/social', async (req, res) => {
         }));
         users.sort((a, b) => b.score - a.score);
         res.json(users.map((e, i) => ({ ...e, rank: i + 1 })));
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// --- ACHIEVEMENTS ---
+
+async function checkAchievements(userId, stats, extra = {}) {
+    if (useMemoryDb) {
+        const user = getMemUser(userId);
+        for (const ach of ACHIEVEMENTS) {
+            if (!user.achievements.includes(ach.id) && ach.condition(stats, extra)) {
+                user.achievements.push(ach.id);
+            }
+        }
+        return;
+    }
+    for (const ach of ACHIEVEMENTS) {
+        if (ach.condition(stats, extra)) {
+            try {
+                await UserAchievement.updateOne(
+                    { userId, achievementId: ach.id },
+                    { $setOnInsert: { userId, achievementId: ach.id, unlockedAt: new Date() } },
+                    { upsert: true }
+                );
+            } catch (e) { /* duplicate key, ignore */ }
+        }
+    }
+}
+
+app.get('/api/achievements', async (req, res) => {
+    const userId = getUserId(req);
+
+    if (useMemoryDb) {
+        const userAchs = userId ? (getMemUser(userId).achievements || []) : [];
+        return res.json(ACHIEVEMENTS.map(a => ({
+            id: a.id, title: a.title, description: a.description, icon: a.icon,
+            unlocked: userAchs.includes(a.id)
+        })));
+    }
+
+    try {
+        const userAchs = userId ? await UserAchievement.find({ userId }) : [];
+        const unlockedIds = userAchs.map(a => a.achievementId);
+        res.json(ACHIEVEMENTS.map(a => ({
+            id: a.id, title: a.title, description: a.description, icon: a.icon,
+            unlocked: unlockedIds.includes(a.id)
+        })));
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
