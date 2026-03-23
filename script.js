@@ -492,20 +492,20 @@ window.switchTab = function(tabName) {
     document.querySelectorAll('#desktop-nav .nav-link').forEach(el => {
         if(el.dataset.tab === tabName) {
             el.classList.remove('text-slate-500', 'dark:text-slate-400');
-            el.classList.add('text-violet-700', 'dark:text-violet-300', 'bg-violet-100', 'dark:bg-violet-800/50');
+            el.classList.add('text-[#F78105]', 'font-bold');
         } else {
-            el.classList.add('text-slate-500', 'dark:text-slate-400');
-            el.classList.remove('text-violet-700', 'dark:text-violet-300', 'bg-violet-100', 'dark:bg-violet-800/50');
+            el.classList.add('text-slate-500');
+            el.classList.remove('text-[#F78105]', 'font-bold');
         }
     });
     
     document.querySelectorAll('#mobile-nav .nav-icon').forEach(el => {
         if(el.dataset.tab === tabName) {
-            el.classList.remove('text-slate-500');
-            el.classList.add('bg-violet-200', 'text-violet-800', 'rounded-[2rem]');
+            el.classList.remove('text-caribbean-current\/50');
+            el.classList.add('bg-brand-lemon', 'text-brand-orange', 'rounded-3xl', 'shadow-sm');
         } else {
-            el.classList.add('text-slate-500');
-            el.classList.remove('bg-violet-200', 'text-violet-800', 'rounded-[2rem]');
+            el.classList.add('text-caribbean-current\/50');
+            el.classList.remove('bg-brand-lemon', 'text-brand-orange', 'rounded-3xl', 'shadow-sm');
         }
     });
 
