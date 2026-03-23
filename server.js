@@ -42,7 +42,8 @@ const statsSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
     gamesPlayed: { type: Number, default: 0 },
     highestStreak: { type: Number, default: 0 },
-    lifetimeKnowledge: { type: Number, default: 0 }
+    lifetimeKnowledge: { type: Number, default: 0 },
+    walletPoints: { type: Number, default: 0 }
 });
 
 const storeItemSchema = new mongoose.Schema({
@@ -132,7 +133,7 @@ function getMemUser(userId) {
     if (!memUsers[userId]) {
         memUsers[userId] = {
             username: 'Guest',
-            stats: { gamesPlayed: 0, highestStreak: 0, lifetimeKnowledge: 0 },
+            stats: { gamesPlayed: 0, highestStreak: 0, lifetimeKnowledge: 0, walletPoints: 0 },
             purchases: [],
             social: { name: 'Guest', score: 0 },
             achievements: []
@@ -324,7 +325,7 @@ app.post('/api/auth/rename', async (req, res) => {
 
 app.get('/api/stats', async (req, res) => {
     const userId = getUserId(req);
-    if (!userId) return res.json({ gamesPlayed: 0, highestStreak: 0, lifetimeKnowledge: 0 });
+    if (!userId) return res.json({ gamesPlayed: 0, highestStreak: 0, lifetimeKnowledge: 0, walletPoints: 0 });
 
     if (useMemoryDb) return res.json(getMemUser(userId).stats);
 
@@ -350,6 +351,7 @@ app.post('/api/stats', async (req, res) => {
         const user = getMemUser(userId);
         user.stats.gamesPlayed += 1;
         user.stats.lifetimeKnowledge += score;
+        user.stats.walletPoints = (user.stats.walletPoints || 0) + score;
         if (streak > user.stats.highestStreak) user.stats.highestStreak = streak;
         user.social.score = user.stats.lifetimeKnowledge;
         // Track weekly score
@@ -371,6 +373,7 @@ app.post('/api/stats', async (req, res) => {
         if (!stats) stats = await Stats.create({ userId });
         stats.gamesPlayed += 1;
         stats.lifetimeKnowledge += score;
+        stats.walletPoints = (stats.walletPoints || 0) + score;
         if (streak > stats.highestStreak) stats.highestStreak = streak;
         await stats.save();
 
@@ -406,24 +409,26 @@ app.post('/api/stats/deduct-hint', async (req, res) => {
 
     if (useMemoryDb) {
         const user = getMemUser(userId);
-        if (user.stats.lifetimeKnowledge < cost) {
-            return res.json({ success: false, error: 'Not enough points', remainingPoints: user.stats.lifetimeKnowledge });
+        user.stats.walletPoints = user.stats.walletPoints || 0;
+        if (user.stats.walletPoints < cost) {
+            return res.json({ success: false, error: 'Not enough points', remainingPoints: user.stats.walletPoints });
         }
-        user.stats.lifetimeKnowledge -= cost;
-        user.social.score = user.stats.lifetimeKnowledge;
-        return res.json({ success: true, remainingPoints: user.stats.lifetimeKnowledge });
+        user.stats.walletPoints -= cost;
+        // Do NOT decrease user.social.score (XP)
+        return res.json({ success: true, remainingPoints: user.stats.walletPoints });
     }
 
     try {
         let stats = await Stats.findOne({ userId });
         if (!stats) stats = await Stats.create({ userId });
-        if (stats.lifetimeKnowledge < cost) {
-            return res.json({ success: false, error: 'Not enough points', remainingPoints: stats.lifetimeKnowledge });
+        stats.walletPoints = stats.walletPoints || 0;
+        if (stats.walletPoints < cost) {
+            return res.json({ success: false, error: 'Not enough points', remainingPoints: stats.walletPoints });
         }
-        stats.lifetimeKnowledge -= cost;
+        stats.walletPoints -= cost;
         await stats.save();
-        await SocialEntry.updateOne({ userId }, { score: stats.lifetimeKnowledge });
-        res.json({ success: true, remainingPoints: stats.lifetimeKnowledge });
+        // Do NOT decrease SocialEntry.score (XP)
+        res.json({ success: true, remainingPoints: stats.walletPoints });
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
@@ -463,10 +468,11 @@ app.post('/api/store/buy', async (req, res) => {
         const item = STORE_ITEMS.find(i => i.itemId === itemId);
         if (!item) return res.status(404).json({ error: 'Item not found.' });
         if (user.purchases.includes(itemId)) return res.status(400).json({ error: 'Already purchased.' });
-        if (user.stats.lifetimeKnowledge < item.cost) return res.status(400).json({ error: 'Not enough points.' });
-        user.stats.lifetimeKnowledge -= item.cost;
+        user.stats.walletPoints = user.stats.walletPoints || 0;
+        if (user.stats.walletPoints < item.cost) return res.status(400).json({ error: 'Not enough points.' });
+        user.stats.walletPoints -= item.cost;
         user.purchases.push(itemId);
-        return res.json({ success: true, remainingPoints: user.stats.lifetimeKnowledge });
+        return res.json({ success: true, remainingPoints: user.stats.walletPoints });
     }
 
     try {
@@ -477,15 +483,15 @@ app.post('/api/store/buy', async (req, res) => {
         if (alreadyBought) return res.status(400).json({ error: 'Already purchased.' });
 
         const stats = await Stats.findOne({ userId });
-        if (!stats || stats.lifetimeKnowledge < item.cost) {
+        if (!stats || (stats.walletPoints || 0) < item.cost) {
             return res.status(400).json({ error: 'Not enough points.' });
         }
 
-        stats.lifetimeKnowledge -= item.cost;
+        stats.walletPoints -= item.cost;
         await stats.save();
         await UserPurchase.create({ userId, itemId });
 
-        res.json({ success: true, remainingPoints: stats.lifetimeKnowledge });
+        res.json({ success: true, remainingPoints: stats.walletPoints });
     } catch (e) {
         res.status(500).json({ error: e.message });
     }

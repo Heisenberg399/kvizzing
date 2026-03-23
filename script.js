@@ -331,22 +331,36 @@ function handleResult(isCorrect, correctAnswer) {
     }, 2000); // 2 seconds delay to read feedback
 }
 
-function showHint() {
+async function showHint() {
+    DOM.hintBtn.disabled = true;
+
+    try {
+        const res = await fetch('/api/stats/deduct-hint', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ cost: 5 })
+        });
+        const data = await res.json();
+        
+        if (!data.success) {
+            alert("Not enough points! You need 5 points for a hint.");
+            DOM.hintBtn.disabled = false;
+            return;
+        }
+        
+        updateWalletDisplay(data.remainingPoints);
+    } catch (e) {
+        console.error('Hint deduction failed:', e);
+        DOM.hintBtn.disabled = false;
+        alert("Failed to connect to the server.");
+        return;
+    }
+
     gameState.hintUsed = true;
     DOM.hintText.textContent = gameState.questions[gameState.currentIndex].hint;
     DOM.hintContainer.classList.remove('hidden');
     setTimeout(() => DOM.hintContainer.classList.remove('opacity-0'), 10);
-    DOM.hintBtn.disabled = true;
-
-    // Deduct 5 points for using a hint
-    fetch('/api/stats/deduct-hint', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ cost: 5 })
-    }).then(res => res.json()).then(data => {
-        if (data.success) updateWalletDisplay(data.remainingPoints);
-    }).catch(e => console.error('Hint deduction failed:', e));
 }
 
 function showAnswer() {
@@ -394,7 +408,7 @@ function endGame() {
         DOM.lifetimeStreakDisplay.textContent = data.highestStreak;
         const totalDisp = document.getElementById('total-games-display');
         if (totalDisp) totalDisp.textContent = data.lifetimeKnowledge;
-        updateWalletDisplay(data.lifetimeKnowledge);
+        updateWalletDisplay(data.walletPoints !== undefined ? data.walletPoints : data.lifetimeKnowledge);
     }).catch(e => console.error("Could not sync stats to backend", e));
 
     // Submit daily score if this was a daily challenge
@@ -565,10 +579,10 @@ async function loadStats() {
         const profileWallet = document.getElementById('profile-wallet');
         const username = localStorage.getItem('kvizzing_username') || 'Guest';
         if (profileName) profileName.textContent = username;
-        if (profileWallet) profileWallet.textContent = stats.lifetimeKnowledge;
+        if (profileWallet) profileWallet.textContent = stats.walletPoints !== undefined ? stats.walletPoints : stats.lifetimeKnowledge;
 
         // Update header wallet too
-        updateWalletDisplay(stats.lifetimeKnowledge);
+        updateWalletDisplay(stats.walletPoints !== undefined ? stats.walletPoints : stats.lifetimeKnowledge);
 
         // Update rank display
         updateRankDisplay(stats.lifetimeKnowledge);
@@ -585,7 +599,7 @@ async function loadStore() {
         const resStats = await fetch(`${API_BASE}/stats`, { credentials: 'include' });
         const stats = await resStats.json();
         const bal = document.getElementById('store-balance');
-        if(bal) bal.textContent = stats.lifetimeKnowledge;
+        if(bal) bal.textContent = stats.walletPoints !== undefined ? stats.walletPoints : stats.lifetimeKnowledge;
         
         const resStore = await fetch(`${API_BASE}/store`, { credentials: 'include' });
         const storeItems = await resStore.json();
@@ -594,7 +608,7 @@ async function loadStore() {
         if(!grid) return;
         grid.innerHTML = '';
         storeItems.forEach(item => {
-            const canAfford = stats.lifetimeKnowledge >= item.cost;
+            const canAfford = (stats.walletPoints !== undefined ? stats.walletPoints : stats.lifetimeKnowledge) >= item.cost;
             const btnClass = item.purchased ? "bg-surface-container-highest text-outline cursor-not-allowed" : 
                 (canAfford ? "bg-primary text-on-primary hover:bg-primary-dim shadow-md transform hover:scale-105" : "bg-surface-container-high text-on-surface-variant cursor-not-allowed opacity-50");
             const btnText = item.purchased ? "Owned" : `${item.cost} Pts`;
@@ -813,7 +827,7 @@ async function hydrateFromBackend() {
         const stats = await res.json();
         const display = document.getElementById('total-games-display');
         if (display) display.textContent = stats.lifetimeKnowledge;
-        updateWalletDisplay(stats.lifetimeKnowledge);
+        updateWalletDisplay(stats.walletPoints !== undefined ? stats.walletPoints : stats.lifetimeKnowledge);
     } catch(e) {}
     // Check if user owns Dark Mode theme
     checkOwnedThemes();
