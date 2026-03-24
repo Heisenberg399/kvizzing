@@ -713,7 +713,7 @@ window.loadSocial = async function(timeframe = 'alltime') {
                         <div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center shadow-inner">
                             <span class="material-symbols-outlined text-on-surface-variant">person</span>
                         </div>
-                        <span class="${nameClass} font-headline text-lg">${displayName}</span>
+                        <span class="${nameClass} font-headline text-base sm:text-lg truncate max-w-[120px] sm:max-w-[200px] block">${displayName}</span>
                     </div>
                     <span class="font-headline font-black text-2xl text-primary">${user.score} <span class="text-sm font-bold text-on-surface-variant">XP</span></span>
                 </li>
@@ -1071,7 +1071,8 @@ window.loadCommunity = async function() {
         const list = document.getElementById('community-list');
         if (!list) return;
         list.innerHTML = '';
-        questions.forEach(q => {
+        window.communityQuestionsList = questions;
+        questions.forEach((q, idx) => {
             list.innerHTML += `
                 <div class="bg-surface-container border border-outline-variant/30 rounded-xl p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
                     <div>
@@ -1079,11 +1080,11 @@ window.loadCommunity = async function() {
                             <span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-bold tracking-wider uppercase text-on-surface-variant">${q.category}</span>
                             <span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-bold tracking-wider uppercase text-on-surface-variant">${q.difficulty}</span>
                         </div>
-                        <p class="font-body text-on-surface mb-6 italic line-clamp-4">"${q.question}"</p>
+                        <p class="font-body text-on-surface mb-6 italic line-clamp-4">"${escapeHtml(q.question)}"</p>
                     </div>
                     <div class="flex items-center justify-between mt-4">
-                        <span class="text-xs font-label text-on-surface-variant">By ${q.authorName || 'Anonymous'}</span>
-                        <button onclick="playCommunityQuestion('${encodeURIComponent(JSON.stringify(q))}')" class="text-primary font-headline font-bold text-sm bg-primary-container/20 px-4 py-2 rounded-lg hover:bg-primary-container/30 transition-colors">Play</button>
+                        <span class="text-xs font-label text-on-surface-variant">By ${escapeHtml(q.authorName || 'Anonymous')}</span>
+                        <button onclick="playCommunityQuestion(${idx})" class="text-primary font-headline font-bold text-sm bg-primary-container/20 px-4 py-2 rounded-lg hover:bg-primary-container/30 transition-colors">Play</button>
                     </div>
                 </div>
             `;
@@ -1091,8 +1092,19 @@ window.loadCommunity = async function() {
     } catch(e) { console.error('Failed to load community questions:', e); }
 };
 
-window.playCommunityQuestion = function(qJson) {
-    const q = JSON.parse(decodeURIComponent(qJson));
+// Utility to safely render text to HTML
+function escapeHtml(unsafe) {
+    return (unsafe || '').toString()
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+
+window.playCommunityQuestion = function(index) {
+    const q = window.communityQuestionsList[index];
+    if (!q) return;
     audio.unlock();
     gameState.mode = 'community';
     gameState.questions = [{
